@@ -1,194 +1,49 @@
  
-// // Match.js
+
 "use client"
-// import { useRouter } from 'next/navigation'
-// import React, { useState, useEffect } from 'react'; 
-// import { getAuth, onAuthStateChanged, signOut, User } from 'firebase/auth'; 
-//  import { firebaseApp} from "../../lib/firebaseConfig";
-
-// import { addDoc, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from 'firebase/firestore';
-// const Match = () => {
- 
-// const [matchedUsers, setMatchedUsers] = useState<string[]>([]);
-//   const [currentUserGender, setCurrentUserGender] = useState(null); 
-
-//   const [user, setUser] = useState<User | null>(null);
-  
-//   const router = useRouter();
-
-   
-  
-// const auth = getAuth(firebaseApp);
-// const db = getFirestore(firebaseApp);
-
-//   useEffect(() => {
-   
-//     const unsubscribe = onAuthStateChanged(auth, (user) => {
-//       if (user) {
-//         setUser(user);
-//       } else {
-     
-//                 setUser(null);
-
-//         router.push('/');
-//       }
-//     });
-
-//     return () => unsubscribe();
-//   }, []);
-
- 
- 
-//   useEffect(() => {
-//     const fetchUserGender = async () => {
-//       if (user) {
-//         const db = getFirestore(firebaseApp);
-//         const usersCollection = collection(db, 'users');
-//         const userDoc = doc(usersCollection, user.uid);
-        
-//         try {
-//           const userDocSnapshot = await getDoc(userDoc);
-//           if (userDocSnapshot.exists()) {
-//             const userData = userDocSnapshot.data();
-//             setCurrentUserGender(userData.gender);
-//             console.log("gender" +userData.gender);
-//           } else {
-//             setCurrentUserGender(null); 
-//           }
-//         } catch (error) {
-//           console.error('Error fetching user data:', error);
-//         }
-//       }
-//     };
-
-//     fetchUserGender();
-
-//   }, [user]); 
- 
-//   useEffect(() => {
-//     const fetchMatchedUsers = async () => {
-//       if (currentUserGender) {
-//         const db = getFirestore(firebaseApp);
-//         const usersCollectionRef = collection(db, 'users');
-//         let usersQuery;
-        
- 
-//         if (currentUserGender === 'male') {
-//           usersQuery = await getDocs(query(usersCollectionRef, where('gender', '==', 'female')));
-//         } else if (currentUserGender === 'female') {
-//           usersQuery = await getDocs(query(usersCollectionRef, where('gender', '==', 'male')));
-//         } else {
- 
-//           return;
-//         }
-
-//         const matchedUsers: any[] | ((prevState:string[]) => string[]) = [];
-//         usersQuery.forEach(doc => {
-//           const userData = doc.data();
-//           matchedUsers.push(userData.name);
-//         });
-//         setMatchedUsers(matchedUsers);
-//         console.log("test match"+setMatchedUsers(matchedUsers));
-//       }
-//     };
-
-//     fetchMatchedUsers();
-
-//   }, [currentUserGender]);
- 
-
-//    const handleMessageClick = (receiverId: string, receiverName: string) => {
-//     router.push(`/messages?receiverId=${receiverId}&receiverName=${receiverName}`);
-//   };
-
-//   return (
-   
-//     <section className="  h-screen relative">
- 
-     
-// <form className="fixed h-[calc(100vh-6rem)] w-[90vw] md:w-[28vw]  overflow-auto top-24 right-[calc(50%-45vw)] z-10 bg-white p-8 rounded-lg shadow-lg ">
-//    <div>
-//      {/* <h1>Profile Page</h1> */}
-//        {user && (
-//          <div>
-//             <label htmlFor="name" className="block text-gray-700 font-bold mb-2"> Welcome,{user.displayName}</label>
-//             <label htmlFor="name" className="block text-gray-700  font-w400 mb-2">Profiles Thatll Make Your Heart Skip Beat</label>
-//          </div>
-//        )}
-
-//       <h1 style={{ fontFamily: 'Arial', color: '#333' }}>Meet Your Potential Matches!</h1>
-// {matchedUsers.length > 0 ? (
-//   <ul style={{ fontFamily: 'Arial', fontSize: '16px', color: '#666' }}>
-//     {matchedUsers.map((userName, index) => (
-//                 <li key={index} className="flex justify-between items-center mb-4 p-2 border rounded">
-//                   <span>{userName}</span>
-//                   <button
-//                     onClick={() => handleMessageClick(matchedUsers[index].id, userName)}
-//                     className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-//                   >
-//                     Message
-//                   </button>
-//                 </li>
-      
-//     ))}
-//   </ul>
-// ) : (
-//   <p style={{ fontFamily: 'Arial', fontSize: '16px', color: '#666' }}>Oops, looks like your search history is as empty as your love life! But hey, at least youre consistent in not finding any matches, whether its on the internet or in your dating endeavors. Maybe you should start swiping right on memes instead, they seem to be the only thing consistently making you laugh these days!</p>
-// )}
-
-// </div> 
-// </form>
- 
-//       <iframe
-//         src="https://saisreesatyassss.github.io/loveBalloon/"
-//         width="100%"
-//         height="100%"
-//         frameBorder="0"
-//         allowFullScreen
-//         className="z-0"
-//       />
-
-//       <style jsx>
-//         {`
-    
-//        @media (max-width: 768px) {
-//        iframe {
-//     display: block;  
- 
-//   }
-//     } 
-//  .logo {
-//           display: block;
-//         }
-//       `}
-//       </style>
-//     </section>
-//   );
-// };
-
-// export default Match;
-// Match.js
-
-
-// "use client"
 import { useRouter } from 'next/navigation'
 import React, { useState, useEffect } from 'react'; 
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'; 
 import { firebaseApp } from "../../lib/firebaseConfig";
-import { collection, doc, getDoc, getDocs, getFirestore, query, where } from 'firebase/firestore';
+import { collection, doc, DocumentData, getDoc, getDocs, getFirestore, query, updateDoc, where } from 'firebase/firestore';
 
 interface MatchedUser {
   id: string;
   name: string;
   gender: string;
 }
-
+interface UserPreferences {
+  importanceOfPhysicalIntimacy?: string;
+  approachToFinances?: string;
+  conflictResolution?: string;
+  importanceOfReligion?: string;
+  attitudeTowardsPets?: string;
+  idealFirstDate?: string;
+  lifestyle?: string;
+  stanceOnChildren?: string;
+  communicationFrequency?: string;
+  relationshipPreference?: string;
+ 
+}
 const Match = () => {
   const [matchedUsers, setMatchedUsers] = useState<MatchedUser[]>([]);
   const [currentUserGender, setCurrentUserGender] = useState<string | null>(null);
+  const [currentUserId, setCurrentUserId] = useState<string | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
-  
+    const [currentUserPreferences, setCurrentUserPreferences] = useState({
+    relationshipPreference: "",
+    communicationFrequency: "",
+    stanceOnChildren: "",
+    lifestyle: "",
+    idealFirstDate: "",
+    attitudeTowardsPets: "",
+    importanceOfReligion: "",
+    conflictResolution: "",
+    approachToFinances: "",
+    importanceOfPhysicalIntimacy: "",
+  });
+
   const auth = getAuth(firebaseApp);
   const db = getFirestore(firebaseApp);
 
@@ -215,8 +70,24 @@ const Match = () => {
         try {
           const userDocSnapshot = await getDoc(userDoc);
           if (userDocSnapshot.exists()) {
-            const userData = userDocSnapshot.data();
+            const userData = userDocSnapshot.data(); 
+            // console.log(userDocSnapshot.id)
+
             setCurrentUserGender(userData.gender);
+            setCurrentUserId(userDocSnapshot.id);
+                setCurrentUserPreferences({
+      relationshipPreference: userData.selectedRelationshipOption || "",
+      communicationFrequency: userData.selectedCommunicationOption || "",
+      stanceOnChildren: userData.selectedStanceOnChildren || "",
+      lifestyle: userData.selectedLifestyle || "",
+      idealFirstDate: userData.selectedIdealFirstDate || "",
+      attitudeTowardsPets: userData.selectedAttitudeTowardsPets || "",
+      importanceOfReligion: userData.selectedReligionSpirituality || "",
+      conflictResolution: userData.selectedConflictResolution || "",
+      approachToFinances: userData.selectedFinancesApproach || "",
+      importanceOfPhysicalIntimacy: userData.selectedPhysicalIntimacy || "",
+    });
+ 
           } else {
             setCurrentUserGender(null);
           }
@@ -229,47 +100,179 @@ const Match = () => {
     fetchUserGender();
   }, [user]);
 
-  // Fetch matched users with their IDs
-  useEffect(() => {
-    const fetchMatchedUsers = async () => {
-      if (currentUserGender) {
-        const usersCollectionRef = collection(db, 'users');
-        let usersQuery;
+useEffect(() => {  
+ 
+  if (currentUserId && currentUserGender && currentUserPreferences) {
+    fetchMatchedUsers(currentUserId, currentUserGender, currentUserPreferences);
+  }
+}, [currentUserId, currentUserGender, currentUserPreferences]);
 
-        // Query users of opposite gender
-        if (currentUserGender === 'male') {
-          usersQuery = query(usersCollectionRef, where('gender', '==', 'female'));
-        } else if (currentUserGender === 'female') {
-          usersQuery = query(usersCollectionRef, where('gender', '==', 'male'));
-        } else {
-          return;
-        }
 
-        try {
-          const querySnapshot = await getDocs(usersQuery);
-          const matches: MatchedUser[] = [];
-          
-          querySnapshot.forEach(doc => {
-            const userData = doc.data();
-            // Only add users who have a name
-            if (userData.name) {
-              matches.push({
-                id: doc.id,
-                name: userData.name,
-                gender: userData.gender
-              });
-            }
+const calculateMatchScore = (currentUser: UserPreferences, otherUser: DocumentData): number => {
+  let score = 0;
+
+  // Ensure both users have valid data
+  if (!currentUser || !otherUser || !otherUser || typeof otherUser !== "object") {
+    console.warn("Invalid user data for matching:", currentUser, otherUser);
+    return 0;
+  }
+
+  // Relationship option compatibility (Highest weight)
+  if (currentUser.relationshipPreference && currentUser.relationshipPreference === otherUser.selectedRelationshipOption) {
+    score += 30;
+  }
+
+  // Communication frequency compatibility
+  if (currentUser.communicationFrequency && currentUser.communicationFrequency === otherUser.selectedCommunicationOption) {
+    score += 10;
+  }
+
+  // Lifestyle similarity
+  if (currentUser.lifestyle && currentUser.lifestyle === otherUser.selectedLifestyle) {
+    score += 15;
+  }
+
+  // Conflict resolution preference
+  if (currentUser.conflictResolution && currentUser.conflictResolution === otherUser.selectedConflictResolution) {
+    score += 10;
+  }
+
+  // Stance on children
+  if (currentUser.stanceOnChildren && currentUser.stanceOnChildren === otherUser.selectedStanceOnChildren) {
+    score += 10;
+  }
+
+  // Physical intimacy importance
+  if (currentUser.importanceOfPhysicalIntimacy && currentUser.importanceOfPhysicalIntimacy === otherUser.selectedPhysicalIntimacy) {
+    score += 10;
+  }
+
+  console.log("Final Match Score:", score);
+  return score;
+};
+
+
+// const fetchMatchedUserss = async (currentUserId: string, currentUserGender: string, currentUserPreferences: UserPreferences) => {
+//   if (!currentUserGender) return;
+
+//   const usersCollectionRef = collection(db, 'users');
+//   let usersQuery;
+
+//   // Get opposite gender users
+//   if (currentUserGender === 'male') {
+//     usersQuery = query(usersCollectionRef, where('gender', '==', 'female'));
+//   } else if (currentUserGender === 'female') {
+//     usersQuery = query(usersCollectionRef, where('gender', '==', 'male'));
+//   } else {
+//     return;
+//   }
+
+//   try {
+//     const querySnapshot = await getDocs(usersQuery);
+//     let potentialMatches: { id: string; name: any; gender: any; score: any; }[] = [];
+
+//     querySnapshot.forEach((doc) => {
+//       const userData = doc.data();
+
+//       if (userData.name) {
+//         // Compute match score
+//         const matchScore = calculateMatchScore(currentUserPreferences, userData);
+//         console.log(matchScore)
+//         potentialMatches.push({
+//           id: doc.id,
+//           name: userData.name,
+//           gender: userData.gender,
+//           score: matchScore
+//         });
+//       }
+//     });
+
+//     // Sort matches by score (highest first)
+//     potentialMatches.sort((a, b) => b.score - a.score);
+
+//     // Select only top 3 matches
+//     const topMatches = potentialMatches.slice(0, 3);
+//     setMatchedUsers(topMatches);
+//     // Update Firestore with the new matches
+//     await updateDoc(doc(db, 'users', currentUserId), {
+//       matches: topMatches
+//     });
+
+//   } catch (error) {
+//     console.error('Error fetching matches:', error);
+//   }
+// };
+const MAX_MATCHES = 3; // You can change this as needed
+
+const fetchMatchedUsers = async (
+  currentUserId: string,
+  currentUserGender: string,
+  currentUserPreferences: UserPreferences
+) => {
+  if (!currentUserGender) return;
+
+  const usersCollectionRef = collection(db, 'users');
+  let usersQuery;
+
+  // Get opposite gender users
+  if (currentUserGender === 'male') {
+    usersQuery = query(usersCollectionRef, where('gender', '==', 'female'));
+  } else if (currentUserGender === 'female') {
+    usersQuery = query(usersCollectionRef, where('gender', '==', 'male'));
+  } else {
+    return;
+  }
+
+  try {
+    const querySnapshot = await getDocs(usersQuery);
+    let potentialMatches: { id: string; name: any; gender: any; score: any }[] = [];
+
+    querySnapshot.forEach((doc) => {
+      const userData = doc.data();
+      if (userData.name) {
+        // Compute match score
+        const matchScore = calculateMatchScore(currentUserPreferences, userData);
+        
+        if (matchScore >= 50) {
+          potentialMatches.push({
+            id: doc.id,
+            name: userData.name,
+            gender: userData.gender,
+            score: matchScore,
           });
-          
-          setMatchedUsers(matches);
-        } catch (error) {
-          console.error('Error fetching matches:', error);
         }
       }
-    };
+    });
 
-    fetchMatchedUsers();
-  }, [currentUserGender]);
+    // Sort matches by score (highest first)
+    potentialMatches.sort((a, b) => b.score - a.score);
+
+    // Select only top matches based on MAX_MATCHES
+    const topMatches = potentialMatches.slice(0, MAX_MATCHES);
+
+    // Fetch the user's existing messages to check if they already messaged 3 people
+    const userDocRef = doc(db, 'users', currentUserId);
+    const userDocSnap = await getDoc(userDocRef);
+    let existingMessages = userDocSnap.exists() ? userDocSnap.data().messagedUsers || [] : [];
+
+    if (existingMessages.length >= MAX_MATCHES) {
+      console.warn('User has already messaged the max number of people.');
+      return;
+    }
+
+    // Update Firestore with the new matches if messaging is not locked
+    await updateDoc(userDocRef, {
+      matches: topMatches,
+    });
+
+    setMatchedUsers(topMatches);
+
+  } catch (error) {
+    console.error('Error fetching matches:', error);
+  }
+};
+ 
+
 
   // Handle clicking the message button
   const handleMessageClick = (receiverId: string, receiverName: string) => {
