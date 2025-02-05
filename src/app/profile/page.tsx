@@ -11,7 +11,7 @@ const ProfilePage = () => {
 
   const [name, setName] = useState<string>('');
   const [gender, setGender] = useState<string>('');
-  const [interests, setInterests] = useState<string>('');
+  // const [interests, setInterests] = useState<string>('');
   const [age, setAge] = useState<number>(0);
 
 
@@ -48,7 +48,7 @@ const db = getFirestore(firebaseApp);
           setName(userData.name || '');
           setAge(userData.age || 18);
           setGender(userData.gender || '');
-          setInterests(userData.interests || '');
+          // setInterests(userData.interests || '');
           setSelectedCommunicationOption(userData.selectedCommunicationOption || '');
           setSelectedRelationshipOption(userData.selectedRelationshipOption || '');
           setSelectedStanceOnChildren(userData.selectedStanceOnChildren || '');
@@ -78,7 +78,8 @@ const db = getFirestore(firebaseApp);
     }
   };
  
-
+const maxUnlockedProfiles=3;
+const maxmatchScore=50;
 
  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault(); // Prevent default form submission behavior
@@ -105,11 +106,11 @@ const db = getFirestore(firebaseApp);
     
     if (userDocSnapshot.exists()) {
       // Update the existing profile with the new data
-        await updateDoc(userDoc, { name, age, gender, interests,selectedCommunicationOption,selectedRelationshipOption,selectedStanceOnChildren,selectedLifestyle ,selectedIdealFirstDate ,selectedAttitudeTowardsPets ,selectedReligionSpirituality ,selectedConflictResolution ,selectedFinancesApproach ,selectedPhysicalIntimacy  });
+        await updateDoc(userDoc, { name, age,maxUnlockedProfiles, maxmatchScore,gender,selectedCommunicationOption,selectedRelationshipOption,selectedStanceOnChildren,selectedLifestyle ,selectedIdealFirstDate ,selectedAttitudeTowardsPets ,selectedReligionSpirituality ,selectedConflictResolution ,selectedFinancesApproach ,selectedPhysicalIntimacy  });
       alert('Profile updated successfully!');
     } else {
       // Add a new document with the user input data to a "users" collection
-        await setDoc(userDoc, { name, age, gender, interests,selectedCommunicationOption,selectedRelationshipOption,selectedStanceOnChildren,selectedLifestyle ,selectedIdealFirstDate ,selectedAttitudeTowardsPets ,selectedReligionSpirituality ,selectedConflictResolution ,selectedFinancesApproach ,selectedPhysicalIntimacy  });
+        await setDoc(userDoc, { name, age,maxUnlockedProfiles, maxmatchScore,gender,selectedCommunicationOption,selectedRelationshipOption,selectedStanceOnChildren,selectedLifestyle ,selectedIdealFirstDate ,selectedAttitudeTowardsPets ,selectedReligionSpirituality ,selectedConflictResolution ,selectedFinancesApproach ,selectedPhysicalIntimacy  });
 
       alert('Profile created successfully!');
     }
@@ -127,7 +128,7 @@ const db = getFirestore(firebaseApp);
     setSelectedFinancesApproach('');  
     setAge(18);
     setGender('');
-    setInterests(''); 
+    // setInterests(''); 
 
           window.location.href = '/match';
 
