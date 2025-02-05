@@ -266,10 +266,98 @@ const physicalIntimacyOptions = [
       <option value="other">Other</option>
     </select>
   </div>
-  
- 
-<div>
-  {/* Relationship Preference */}
+
+    {/* Radio Button Groups */}
+          {[
+            {
+              label: "Relationship Preference",
+              options: relationshipOptions,
+              value: selectedRelationshipOption,
+              onChange: setSelectedRelationshipOption
+            },
+            {
+              label: "Communication Frequency",
+              options: communicationOptions,
+              value: selectedCommunicationOption,
+              onChange: setSelectedCommunicationOption
+            },
+            {
+              label: "Stance on Children",
+              options: stanceOnChildrenOptions,
+              value: selectedStanceOnChildren,
+              onChange: setSelectedStanceOnChildren
+            },
+            {
+              label: "Lifestyle",
+              options: lifestyleOptions,
+              value: selectedLifestyle,
+              onChange: setSelectedLifestyle
+            },
+            {
+              label: "Ideal First Date",
+              options: idealFirstDateOptions,
+              value: selectedIdealFirstDate,
+              onChange: setSelectedIdealFirstDate
+            },
+            {
+              label: "Attitude Towards Pets",
+              options: attitudeTowardsPetsOptions,
+              value: selectedAttitudeTowardsPets,
+              onChange: setSelectedAttitudeTowardsPets
+            },
+            {
+              label: "Importance of Religion/Spirituality",
+              options: religionSpiritualityOptions,
+              value: selectedReligionSpirituality,
+              onChange: setSelectedReligionSpirituality
+            },
+            {
+              label: "Conflict Resolution",
+              options: conflictResolutionOptions,
+              value: selectedConflictResolution,
+              onChange: setSelectedConflictResolution
+            },
+            {
+              label: "Approach to Finances",
+              options: financesApproachOptions,
+              value: selectedFinancesApproach,
+              onChange: setSelectedFinancesApproach
+            },
+            {
+              label: "Importance of Physical Intimacy",
+              options: physicalIntimacyOptions,
+              value: selectedPhysicalIntimacy,
+              onChange: setSelectedPhysicalIntimacy
+            }
+          ].map((group, groupIndex) => (
+            <div key={groupIndex} className="space-y-4 p-4 bg-white">
+              <label className="block text-gray-900 font-medium text-lg">
+                {group.label}
+              </label>
+              <div className="space-y-2">
+                {group.options.map((option, index) => (
+                  <div key={index} className="flex items-center">
+                    <input 
+                      type="radio" 
+                      id={`${group.label}-${index}`} 
+                      value={option} 
+                      checked={group.value === option} 
+                      onChange={() => group.onChange(option)} 
+                      className="w-4 h-4 text-pink-500 border-gray-300 focus:ring-pink-400"
+                    />
+                    <label 
+                      htmlFor={`${group.label}-${index}`} 
+                      className="ml-2 text-gray-900"
+                    >
+                      {option}
+                    </label>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        {/* </div> */}
+{/* <div>
   <div className="mb-4">
     <label htmlFor="relationshipPreference" className="block text-gray-700 font-bold mb-2">Relationship Preference:</label>
     {relationshipOptions.map((option, index) => (
@@ -286,8 +374,6 @@ const physicalIntimacyOptions = [
       </div>
     ))}
   </div>
-
-  {/* Communication Frequency */}
   <div className="mb-4">
     <label htmlFor="communicationFrequency" className="block text-gray-700 font-bold mb-2">Communication Frequency:</label>
     {communicationOptions.map((option, index) => (
@@ -304,10 +390,10 @@ const physicalIntimacyOptions = [
       </div>
     ))}
   </div>
-</div>
+</div> */}
  
   {/* Stance on Children */}
-  <div className="mb-4">
+  {/* <div className="mb-4">
     <label htmlFor="stanceOnChildren" className="block text-gray-700 font-bold mb-2">Stance on Children:</label>
     {stanceOnChildrenOptions.map((option, index) => (
       <div key={index} className="flex items-center mb-2">
@@ -322,10 +408,10 @@ const physicalIntimacyOptions = [
         <label htmlFor={`stanceOnChildrenOption${index}`} className="text-gray-800">{option}</label>
       </div>
     ))}
-  </div>
+  </div> */}
 
   {/* Lifestyle */}
-  <div className="mb-4">
+  {/* <div className="mb-4">
     <label htmlFor="lifestyle" className="block text-gray-700 font-bold mb-2">Lifestyle:</label>
     {lifestyleOptions.map((option, index) => (
       <div key={index} className="flex items-center mb-2">
@@ -340,10 +426,10 @@ const physicalIntimacyOptions = [
         <label htmlFor={`lifestyleOption${index}`} className="text-gray-800">{option}</label>
       </div>
     ))}
-  </div>
+  </div> */}
 
   {/* Ideal First Date */}
-  <div className="mb-4">
+  {/* <div className="mb-4">
     <label htmlFor="idealFirstDate" className="block text-gray-700 font-bold mb-2">Ideal First Date:</label>
     {idealFirstDateOptions.map((option, index) => (
       <div key={index} className="flex items-center mb-2">
@@ -358,10 +444,10 @@ const physicalIntimacyOptions = [
         <label htmlFor={`idealFirstDateOption${index}`} className="text-gray-800">{option}</label>
       </div>
     ))}
-  </div>
+  </div> */}
 
   {/* Attitude Towards Pets */}
-  <div className="mb-4">
+  {/* <div className="mb-4">
     <label htmlFor="attitudeTowardsPets" className="block text-gray-700 font-bold mb-2">Attitude Towards Pets:</label>
     {attitudeTowardsPetsOptions.map((option, index) => (
       <div key={index} className="flex items-center mb-2">
@@ -376,10 +462,10 @@ const physicalIntimacyOptions = [
         <label htmlFor={`attitudeTowardsPetsOption${index}`} className="text-gray-800">{option}</label>
       </div>
     ))}
-  </div>
+  </div> */}
 
   {/* Importance of Religion/Spirituality */}
-  <div className="mb-4">
+  {/* <div className="mb-4">
     <label htmlFor="religionSpirituality" className="block text-gray-700 font-bold mb-2">Importance of Religion/Spirituality:</label>
     {religionSpiritualityOptions.map((option, index) => (
       <div key={index} className="flex items-center mb-2">
@@ -394,10 +480,10 @@ const physicalIntimacyOptions = [
         <label htmlFor={`religionSpiritualityOption${index}`} className="text-gray-800">{option}</label>
       </div>
     ))}
-  </div>
+  </div> */}
 
   {/* Conflict Resolution */}
-  <div className="mb-4">
+  {/* <div className="mb-4">
     <label htmlFor="conflictResolution" className="block text-gray-700 font-bold mb-2">Conflict Resolution:</label>
     {conflictResolutionOptions.map((option, index) => (
       <div key={index} className="flex items-center mb-2">
@@ -412,10 +498,10 @@ const physicalIntimacyOptions = [
         <label htmlFor={`conflictResolutionOption${index}`} className="text-gray-800">{option}</label>
       </div>
     ))}
-  </div>
+  </div> */}
 
   {/* Approach to Finances */}
-  <div className="mb-4">
+  {/* <div className="mb-4">
     <label htmlFor="financesApproach" className="block text-gray-700 font-bold mb-2">Approach to Finances:</label>
     {financesApproachOptions.map((option, index) => (
       <div key={index} className="flex items-center mb-2">
@@ -430,8 +516,8 @@ const physicalIntimacyOptions = [
         <label htmlFor={`financesApproachOption${index}`} className="text-gray-800">{option}</label>
       </div>
     ))}
-  </div>
- <div className="mb-4">
+  </div> */}
+ {/* <div className="mb-4">
     <label htmlFor="physicalIntimacy" className="block text-gray-700 font-bold mb-2">Importance of Physical Intimacy:</label>
     {physicalIntimacyOptions.map((option, index) => (
       <div key={index} className="flex items-center mb-2">
@@ -446,7 +532,7 @@ const physicalIntimacyOptions = [
         <label htmlFor={`physicalIntimacyOption${index}`} className="text-gray-800">{option}</label>
       </div>
     ))}
-  </div> 
+  </div>  */}
 <button 
    type="submit"
    className="bg-pink-500 text-white font-bold py-2 px-4 rounded focus:outline-none hover:bg-pink-700 disabled:bg-gray-400"
