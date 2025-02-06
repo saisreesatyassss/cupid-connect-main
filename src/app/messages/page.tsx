@@ -1,6 +1,6 @@
   
   "use client"
-  import React, { useState, useEffect, useRef } from 'react';
+  import React, { useState, useEffect, useRef ,Suspense } from 'react';
   import { useRouter, useSearchParams } from 'next/navigation';
   import { Menu } from 'lucide-react';
 
@@ -32,7 +32,7 @@
     id: string;
     name: string;
   }
-  const Messages = () => {
+  const MessagesContent  = () => {
     const router = useRouter();
     const [user, setUser] = useState<any>(null);
     const [messages, setMessages] = useState<Message[]>([]);
@@ -46,6 +46,26 @@
 
     const auth = getAuth(firebaseApp);
     const db = getFirestore(firebaseApp);
+ // Extract receiverId and receiverName from the URL when component mounts or URL changes
+   const searchParams = useSearchParams(); // <-- New way to access query params in Next.js 13+
+
+  useEffect(() => {
+    // const params = new URLSearchParams(window.location.search);
+    // const rid = params.get("receiverId");
+    // const rname = params.get("receiverName");
+
+    const rid = searchParams.get("receiverId");
+    const rname = searchParams.get("receiverName");
+
+    if (!rid || !rname) {
+      console.error("Missing receiver information");
+      router.push("/match");
+      return;
+    }
+
+    setReceiverId(rid);
+    setReceiverName(rname);
+  }, [searchParams, router]);
 
     // Scroll to bottom of messages
     const scrollToBottom = () => {
@@ -102,87 +122,8 @@
 
       return () => unsubscribe();
     }, []);
+ 
 
-    // useEffect(() => {
-    //   if (!user) return;
-
-    //   try {
-    //     // Get receiverId and receiverName from URL params
-    //     const params = new URLSearchParams(window.location.search);
-    //     const rid = params.get('receiverId');
-    //     const rname = params.get('receiverName');
-        
-    //     if (!rid || !rname) {
-    //       console.error('Missing receiver information');
-    //       router.push('/match');  
-    //       return;
-    //     }
-
-    //     setReceiverId(rid);
-    //     setReceiverName(rname);
-
-    //     // Set up messages listener
-    //     const messagesRef = collection(db, 'messages');
-    //     const q = query(
-    //       messagesRef,
-    //       where('participants', 'array-contains', user.uid),
-    //       orderBy('timestamp', 'asc'),
-    //       limit(100)  
-    //     );
-
-    //     const unsubscribe = onSnapshot(q, 
-    //       (snapshot) => {
-    //         const messageList: Message[] = [];
-    //         snapshot.forEach((doc) => {
-    //           const data = doc.data();
-    //           if ((data.senderId === user.uid && data.receiverId === rid) ||
-    //               (data.senderId === rid && data.receiverId === user.uid)) {
-    //             messageList.push({
-    //               id: doc.id,
-    //               text: data.text,
-    //               senderId: data.senderId,
-    //               receiverId: data.receiverId,
-    //               senderName: data.senderName,
-    //               timestamp: data.timestamp
-    //             });
-    //           }
-    //         });
-    //         setMessages(messageList);
-    //         setIsLoading(false);
-    //       },
-    //       (error) => {
-    //         console.error("Error fetching messages:", error);
-    //         setIsLoading(false);
-    //       }
-    //     );
-
-    //     return () => unsubscribe();
-    //   } catch (error) {
-    //     console.error("Error in messages setup:", error);
-    //     setIsLoading(false);
-    //   }
-    // }, [user, receiverId]);
-
- // Extract receiverId and receiverName from the URL when component mounts or URL changes
-   const searchParams = useSearchParams(); // <-- New way to access query params in Next.js 13+
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    // const rid = params.get("receiverId");
-    // const rname = params.get("receiverName");
-
-    const rid = searchParams.get("receiverId");
-    const rname = searchParams.get("receiverName");
-
-    if (!rid || !rname) {
-      console.error("Missing receiver information");
-      router.push("/match");
-      return;
-    }
-
-    setReceiverId(rid);
-    setReceiverName(rname);
-  }, [searchParams]); 
 
   // Fetch messages when receiverId changes
   useEffect(() => {
@@ -406,4 +347,15 @@
     );
   };
 
-  export default Messages;
+  // export default MessagesContent ;
+
+  // Main component with Suspense
+const Messages = () => {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <MessagesContent />
+    </Suspense>
+  );
+};
+
+export default Messages;

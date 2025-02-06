@@ -28,7 +28,7 @@ const ProfilePage = () => {
   const [selectedConflictResolution  , setSelectedConflictResolution] = useState<string>('');  
   const [selectedFinancesApproach   , setSelectedFinancesApproach] = useState<string>(''); 
   const [selectedPhysicalIntimacy    , setSelectedPhysicalIntimacy ] = useState<string>('');  
-   const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
 
 
   
@@ -215,59 +215,61 @@ const physicalIntimacyOptions = [
    
     <section className="  h-screen relative">
      
-<form className="fixed h-[calc(100vh-6rem)] w-[90vw] md:w-[28vw]  overflow-auto top-24 left-[calc(50%-45vw)] z-10 bg-white p-8 rounded-lg shadow-lg " onSubmit={handleSubmit}>
+    <form className="fixed h-[calc(100vh-6rem)] w-[90vw] md:w-[28vw]  overflow-auto top-24 left-[calc(50%-45vw)] z-10 bg-white p-8 rounded-lg shadow-lg " onSubmit={handleSubmit}>
 
 
  
-   <div> 
-       {user && (
-         <div>
-            <label htmlFor="name" className="block text-gray-700 font-bold mb-2"> Welcome,{user.displayName}</label>
-            <label htmlFor="name" className="block text-gray-700  font-w400 mb-2"> Please create your profile genuinely</label>
-           {/* <button onClick={handleSignOut}>Sign out</button> */}
-         </div>
-       )}
-</div> 
-  <div className="mb-4">
-    <label htmlFor="name" className="block text-gray-700 font-bold mb-2">Name:</label>
-    <input 
-      type="text" 
-      id="name" 
-      value={name} 
-      onChange={(e) => setName(e.target.value)} 
-      className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-pink-400"
-      required 
-    />
-  </div>
-  <div className="mb-4">
-    <label htmlFor="age" className="block text-gray-700 font-bold mb-2">Age:</label>
-    <input 
-      type="number" 
-      id="age" 
-      value={age} 
-      onChange={(e) => setAge(parseInt(e.target.value))} 
-      className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-pink-400"
-      min="18" 
-      required 
-    />
-  </div>
-  <div className="mb-4">
-    <label htmlFor="gender" className="block text-gray-700 font-bold mb-2">Gender:</label>
-    <select 
-      id="gender" 
-      value={gender} 
-      onChange={(e) => setGender(e.target.value)} 
-      className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-pink-400"
-      required 
-    >
-      <option value="">Select Gender</option>
-      <option value="male">Male</option>
-      <option value="female">Female</option>
-      <option value="other">Other</option>
-    </select>
-  </div>
+            <div> 
+                  {user && (
+                    <div>
+                        <label htmlFor="name" className="block text-gray-700 font-bold mb-2"> Welcome,{user.displayName}</label>
+                        <label htmlFor="name" className="block text-gray-700  font-w400 mb-2"> Please create your profile genuinely</label>
+                      {/* <button onClick={handleSignOut}>Sign out</button> */}
+                    </div>
+                  )}
+            </div> 
 
-    {/* Radio Button Groups */}
+            <div className="mb-4">
+              <label htmlFor="name" className="block text-gray-900 font-bold mb-2">Name:</label>
+              <input 
+                type="text" 
+                id="name" 
+                value={name} 
+                onChange={(e) => setName(e.target.value)} 
+                className="border border-gray-300 rounded-md px-4 py-2 w-full bg-white text-gray-900 focus:outline-none focus:border-pink-400 focus:ring-pink-400"
+                required 
+              />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="age" className="block text-gray-900 font-bold mb-2">Age:</label>
+              <input 
+                type="number" 
+                id="age" 
+                value={age} 
+                onChange={(e) => setAge(parseInt(e.target.value))} 
+                className="border border-gray-300 rounded-md px-4 py-2 w-full bg-white text-gray-900 focus:outline-none focus:border-pink-400 focus:ring-pink-400"
+                min="18" 
+                required 
+              />
+            </div>
+
+            <div className="mb-4">
+              <label htmlFor="gender" className="block text-gray-900 font-bold mb-2">Gender:</label>
+              <select 
+                id="gender" 
+                value={gender} 
+                onChange={(e) => setGender(e.target.value)} 
+                className="border border-gray-300 rounded-md px-4 py-2 w-full bg-white text-gray-900 focus:outline-none focus:border-pink-400 focus:ring-pink-400"
+                required 
+              >
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+ 
           {[
             {
               label: "Relationship Preference",
@@ -356,7 +358,8 @@ const physicalIntimacyOptions = [
               </div>
             </div>
           ))}
-        {/* </div> */}
+
+{/* </div> */}
 {/* <div>
   <div className="mb-4">
     <label htmlFor="relationshipPreference" className="block text-gray-700 font-bold mb-2">Relationship Preference:</label>
@@ -533,15 +536,17 @@ const physicalIntimacyOptions = [
       </div>
     ))}
   </div>  */}
-<button 
-   type="submit"
-   className="bg-pink-500 text-white font-bold py-2 px-4 rounded focus:outline-none hover:bg-pink-700 disabled:bg-gray-400"
-   disabled={!name || !age || !gender || !selectedRelationshipOption}
->
-   {loading ? 'Creating Profile...' : 'Create Profile'}
-</button>
 
-
+ 
+      <button 
+        type="submit"
+        className="bg-pink-500 text-white font-bold py-2 px-4 rounded focus:outline-none hover:bg-pink-700 disabled:bg-gray-400"
+        disabled={!name || !age || !gender || !selectedRelationshipOption}
+      >
+        {loading ? 'Creating Profile...' : 'Create Profile'}
+      </button>
+ 
+ 
           
 </form>
 
@@ -555,20 +560,16 @@ const physicalIntimacyOptions = [
         allowFullScreen
         className="z-0"
       />
- 
+
       <style jsx>
-        {`
-    
-       @media (max-width: 768px) {
-       iframe {
-    display: block;  
- 
-  }
-    } 
- .logo {
-          display: block;
-        }
-      `}
+        {
+
+        `   
+       @media (max-width: 768px) {iframe {display: block; }} 
+        .logo {display: block;}
+      `
+
+      }
       </style>
     </section>
   );
