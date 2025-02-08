@@ -44,22 +44,35 @@ const router = useRouter();
 //   } catch (error) {
 //     console.error("Error signing in:", error);
 //   }
-// };
+// }; 
 const signIn = async () => {
   try {
     const auth = getAuth();
+    const router = useRouter();
+    const currentUser = auth.currentUser;
+
+    // If user is already signed in, redirect to /profile
+    if (currentUser) {
+      console.log("User is already signed in.");
+      router.push('/profile');
+      return;
+    }
+
     const provider = new GoogleAuthProvider();
 
-    // Detect iOS devices
+    // Detect if the device is iOS
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
     if (isIOS) {
-      console.log("Redirecting on iOS...");
+      console.log("iOS detected - using redirect sign-in...");
       await signInWithRedirect(auth, provider);
     } else {
+      console.log("Using popup sign-in...");
       const result = await signInWithPopup(auth, provider);
-      console.log("Signed in user:", result.user);
-      await checkUserProfile(result.user.uid);
+      console.log("User signed in:", result.user);
+
+      // Redirect to profile after sign-in
+      router.push('/profile');
     }
   } catch (error) {
     console.error("Error signing in:", error);
