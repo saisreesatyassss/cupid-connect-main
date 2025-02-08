@@ -10,8 +10,10 @@ import { Home,HomeIcon, Settings } from "lucide-react";
 import { GoogleAuthProvider, User, getAuth, signInWithPopup } from 'firebase/auth';
 import { addDoc, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import FloatingWidget from '../FloatingWidget';
+import { signInWithRedirect, getRedirectResult } from "firebase/auth";
 
- 
+//  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect } from "firebase/auth";
+
  
 const auth = getAuth(firebaseApp);
  
@@ -43,32 +45,26 @@ const router = useRouter();
 //     console.error("Error signing in:", error);
 //   }
 // };
-
 const signIn = async () => {
   try {
-    const currentUser = auth.currentUser;
-    
-    if (currentUser) {
-      console.log("User is already signed in.");
-      await checkUserProfile(currentUser.uid);
-      return;
-    }
-
+    const auth = getAuth();
     const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(auth, provider);
-    setUser(result.user);
 
-    if (typeof window !== 'undefined') {
-      console.log("Checking user profile...");
+    // Detect iOS devices
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+    if (isIOS) {
+      console.log("Redirecting on iOS...");
+      await signInWithRedirect(auth, provider);
+    } else {
+      const result = await signInWithPopup(auth, provider);
+      console.log("Signed in user:", result.user);
       await checkUserProfile(result.user.uid);
-      console.log(checkUserProfile(result.user.uid));
-
     }
   } catch (error) {
     console.error("Error signing in:", error);
   }
 };
-
 const checkUserProfile = async (userId: string) => {
   try {
     const db = getFirestore(firebaseApp);
