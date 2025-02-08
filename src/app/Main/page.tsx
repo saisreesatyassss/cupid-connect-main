@@ -10,10 +10,8 @@ import { Home,HomeIcon, Settings } from "lucide-react";
 import { GoogleAuthProvider, User, getAuth, signInWithPopup } from 'firebase/auth';
 import { addDoc, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import FloatingWidget from '../FloatingWidget';
-import { signInWithRedirect, getRedirectResult } from "firebase/auth";
 
-//  import { getAuth, GoogleAuthProvider, signInWithPopup, signInWithRedirect } from "firebase/auth";
-
+ 
  
 const auth = getAuth(firebaseApp);
  
@@ -22,29 +20,7 @@ function Main() {
 const [user, setUser] = useState<User | null>(null);
 const router = useRouter();
 
-// const signIn = async () => {
-//   try {
  
-//     const currentUser = auth.currentUser;
-//     if (currentUser) {
- 
-//       console.log("User is already signed in.");
-//       router.push('/profile');
-//       return;  
-//     }
-
- 
-//     const provider = new GoogleAuthProvider();
-//     const result = await signInWithPopup(auth, provider);
-//     setUser(result.user);
-//     if (typeof window !== 'undefined') {
-//       console.log("Redirecting to /profile");
-//       router.push('/profile');
-//     }
-//   } catch (error) {
-//     console.error("Error signing in:", error);
-//   }
-// };
 
 const signIn = async () => {
   try {
@@ -57,45 +33,17 @@ const signIn = async () => {
     }
 
     const provider = new GoogleAuthProvider();
-    
-    // Detect iOS device
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ;
-    
-    if (isIOS) {
-      // Use redirect method for iOS
-      await signInWithRedirect(auth, provider);
-      
-      // Handle redirect result
-      const result = await getRedirectResult(auth);
-      
-      if (result) {
-        setUser(result.user);
-        
-        if (typeof window !== 'undefined') {
-          console.log("Checking user profile...");
-          await checkUserProfile(result.user.uid);
-        }
-      }
-    } else {
-      // Use popup for non-iOS devices
-      const result = await signInWithPopup(auth, provider);
-      setUser(result.user);
+    const result = await signInWithPopup(auth, provider);
+    setUser(result.user);
 
-      if (typeof window !== 'undefined') {
-        console.log("Checking user profile...");
-        await checkUserProfile(result.user.uid);
-      }
+    if (typeof window !== 'undefined') {
+      console.log("Checking user profile...");
+      await checkUserProfile(result.user.uid);
+      console.log(checkUserProfile(result.user.uid));
+
     }
   } catch (error) {
     console.error("Error signing in:", error);
-    // Add more specific error handling
-    // if (error.code === 'auth/popup-blocked') {
-    //   console.error("Popup was blocked. Please allow popups and try again.");
-    // } else if (error.code === 'auth/cancelled-popup-request') {
-    //   console.error("Sign-in was cancelled.");
-    // } else if (error.code === 'auth/popup-closed-by-user') {
-    //   console.error("Sign-in window was closed.");
-    // }
   }
 };
 
