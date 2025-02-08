@@ -4,10 +4,12 @@ import React, { useState } from 'react';
 import Image from 'next/image'; 
 import { useRouter } from 'next/navigation'; 
 import { firebaseApp} from "../../lib/firebaseConfig";
+import { Home,HomeIcon, Settings } from "lucide-react";
 
 
 import { GoogleAuthProvider, User, getAuth, signInWithPopup } from 'firebase/auth';
 import { addDoc, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from 'firebase/firestore';
+import FloatingWidget from '../FloatingWidget';
 
  
  
@@ -112,17 +114,6 @@ const checkUserProfile = async (userId: string) => {
     <section className="text-white h-screen relative">
 
 
-         <div>
-   
-       {user && (
-         <div>
-            <label htmlFor="name" className="block text-gray-700 font-bold mb-2"> Welcome,{user.displayName}</label>
-            <label htmlFor="name" className="block text-gray-700  font-w400 mb-2"> Please create your profile genuinely</label>
- 
-         </div>
-       )}
-</div> 
-
    
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
             <div className="logo-container" onClick={signIn}>
@@ -149,7 +140,10 @@ const checkUserProfile = async (userId: string) => {
         className="z-0"
       />
 
-      {/* CSS */}
+
+
+      
+
       <style jsx>{` 
       
 
@@ -181,6 +175,28 @@ const checkUserProfile = async (userId: string) => {
         }
       `}</style>
     </section>
+
+    //     <section className="text-white h-screen relative flex items-center justify-center">
+    //    <div
+    //     className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 animate-pulse cursor-pointer"
+    //     onClick={signIn}
+    //   >
+    //     <Image
+    //       src="/Logo1.png"
+    //       width={250}
+    //       height={100}
+    //       alt="Logo"
+    //       className="w-[250px] md:w-[150px] transition-transform duration-500 hover:scale-110"
+    //     />
+    //   </div>
+
+    //    <iframe
+    //     src="https://saisreesatyassss.github.io/Proposal_Valentine_Special/"
+    //     className="absolute inset-0 w-full h-full z-0"
+    //     frameBorder="0"
+    //     allowFullScreen
+    //   />
+    // </section>
   );
 }
  

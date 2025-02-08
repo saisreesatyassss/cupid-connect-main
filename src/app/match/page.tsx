@@ -311,6 +311,7 @@ import React, { useState, useEffect } from 'react';
 import { getAuth, onAuthStateChanged, User } from 'firebase/auth'; 
 import { firebaseApp } from "../../lib/firebaseConfig";
 import { collection, doc, DocumentData, getDoc, getDocs, getFirestore, query, updateDoc, where } from 'firebase/firestore';
+import FloatingWidget from '../FloatingWidget';
 
 interface MatchedUser {
   id: string;
@@ -337,7 +338,8 @@ const Match = () => {
   const [user, setUser] = useState<User | null>(null);
   const router = useRouter();
   const [unlockedProfiles, setUnlockedProfiles] = useState<string[]>([]);
-  // const MAX_UNLOCKED_PROFILES = 3;
+
+  
 
   const [currentUserPreferences, setCurrentUserPreferences] = useState({
     relationshipPreference: "",
@@ -351,7 +353,7 @@ const Match = () => {
   const auth = getAuth(firebaseApp);
   const db = getFirestore(firebaseApp);
 
-  // Auth state listener
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -365,7 +367,8 @@ const Match = () => {
     return () => unsubscribe();
   }, []);
 
-  // Fetch current user's data and unlocked profiles
+
+
   useEffect(() => {
     const fetchUserData = async () => {
       if (user) {
@@ -391,8 +394,7 @@ const Match = () => {
             // Fetch unlocked profiles
             const unlockedProfileIds = userData.unlockedProfiles || [];
             setUnlockedProfiles(unlockedProfileIds);
-  // console.log(userData)
-            const maxUnlockedProfiles = userData.maxUnlockedProfiles || 2;
+            const maxUnlockedProfiles = userData.maxUnlockedProfiles || 3;
             setMaxUnlockedProfiles(maxUnlockedProfiles);
             const maxmatchScore = userData.maxmatchScore || 60;
             setmaxmatchScore(maxmatchScore);
@@ -407,6 +409,7 @@ const Match = () => {
 
     fetchUserData();
   }, [user]);
+
 
   // Fetch matched users based on preferences
   useEffect(() => {  
@@ -568,7 +571,94 @@ const calculateMatchScore = (currentUser: UserPreferences, otherUser: DocumentDa
   };
 
   return (
-    <section className="h-screen relative">
+    // <section className="h-screen relative">
+    //   <form className="fixed h-[calc(100vh-6rem)] w-[90vw] md:w-[28vw] overflow-auto top-24 right-[calc(50%-45vw)] z-10 bg-white p-8 rounded-lg shadow-lg">
+    //     <div>
+    //       {user && (
+    //         <div>
+    //           <label className="block text-gray-700 font-bold mb-2">
+    //             Welcome, {user.displayName}
+    //           </label>
+    //           <div className="mb-4 text-sm text-gray-600">
+    //             Unlocked Profiles: {unlockedProfiles.length} / {maxUnlockedProfiles}
+    //           </div>
+    //           <label className="block text-gray-700 font-w400 mb-2">
+    //             Profiles That'll Make Your Heart Skip a Beat
+    //           </label>
+    //         </div>
+    //       )}
+
+    //       <h1 style={{ fontFamily: 'Arial', color: '#333' }}>
+    //         Meet Your Potential Matches!
+    //       </h1>
+          
+    //       {matchedUsers.length > 0 ? (
+    //         <ul className="space-y-4">
+    //           {matchedUsers.map((matchedUser) => (
+    //             <li 
+    //               key={matchedUser.id} 
+    //               className="flex justify-between items-center p-4 border rounded-lg hover:bg-gray-50"
+    //             >
+    //               <div className="flex-grow">
+    //                 <span className="text-gray-700 mr-2">{matchedUser.name}</span>
+    //                 {!matchedUser.isUnlocked && (
+    //                   <span className="text-xs text-red-500">(Locked)</span>
+    //                 )}
+    //               </div>
+    //               {!matchedUser.isUnlocked ? (
+    //                 <button  
+    //                   type="button"
+    //                   onClick={() => handleUnlockProfile(matchedUser.id)}
+    //                   className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
+    //                   disabled={unlockedProfiles.length >= maxUnlockedProfiles}
+    //                 >
+    //                   Unlock Profile
+    //                 </button>
+    //               ) : (
+    //                 <button  
+    //                   type="button"   
+    //                   onClick={() => handleMessageClick(matchedUser.id, matchedUser.name)}
+    //                   className="px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+    //                 >
+    //                   Message
+    //                 </button>
+    //               )}
+    //             </li>
+    //           ))}
+    //         </ul>
+    //       ) : (
+    //         <p style={{ fontFamily: 'Arial', fontSize: '16px', color: '#666' }}>
+    //           Oops, looks like your search history is as empty as your love life! 
+    //           No matches found that align with your preferences.
+    //         </p>
+    //       )}
+    //     </div>
+    //   </form>
+
+    //   <iframe
+    //     src="https://saisreesatyassss.github.io/loveBalloon/"
+    //     width="100%"
+    //     height="100%"
+    //     frameBorder="0"
+    //     allowFullScreen
+    //     className="z-0"
+    //   />
+
+    //   <style jsx>{`
+    //     @media (max-width: 768px) {
+    //       iframe {
+    //         display: block;
+    //       }
+    //     }
+    //     .logo {
+    //       display: block;
+    //     }
+    //   `}</style>
+      
+  
+    // </section>
+
+        <section className="h-screen relative">
       <form className="fixed h-[calc(100vh-6rem)] w-[90vw] md:w-[28vw] overflow-auto top-24 right-[calc(50%-45vw)] z-10 bg-white p-8 rounded-lg shadow-lg">
         <div>
           {user && (
@@ -651,6 +741,8 @@ const calculateMatchScore = (currentUser: UserPreferences, otherUser: DocumentDa
           display: block;
         }
       `}</style>
+      
+  
     </section>
   );
 };
