@@ -44,40 +44,61 @@ const router = useRouter();
 //   } catch (error) {
 //     console.error("Error signing in:", error);
 //   }
-// }; 
+// };
+
 const signIn = async () => {
   try {
-    const auth = getAuth();
-    const router = useRouter();
     const currentUser = auth.currentUser;
-
-    // If user is already signed in, redirect to /profile
+    
     if (currentUser) {
       console.log("User is already signed in.");
-      router.push('/profile');
+      await checkUserProfile(currentUser.uid);
       return;
     }
 
     const provider = new GoogleAuthProvider();
-
-    // Detect if the device is iOS
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
+    
+    // Detect iOS device
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ;
+    
     if (isIOS) {
-      console.log("iOS detected - using redirect sign-in...");
+      // Use redirect method for iOS
       await signInWithRedirect(auth, provider);
+      
+      // Handle redirect result
+      const result = await getRedirectResult(auth);
+      
+      if (result) {
+        setUser(result.user);
+        
+        if (typeof window !== 'undefined') {
+          console.log("Checking user profile...");
+          await checkUserProfile(result.user.uid);
+        }
+      }
     } else {
-      console.log("Using popup sign-in...");
+      // Use popup for non-iOS devices
       const result = await signInWithPopup(auth, provider);
-      console.log("User signed in:", result.user);
+      setUser(result.user);
 
-      // Redirect to profile after sign-in
-      router.push('/profile');
+      if (typeof window !== 'undefined') {
+        console.log("Checking user profile...");
+        await checkUserProfile(result.user.uid);
+      }
     }
   } catch (error) {
     console.error("Error signing in:", error);
+    // Add more specific error handling
+    // if (error.code === 'auth/popup-blocked') {
+    //   console.error("Popup was blocked. Please allow popups and try again.");
+    // } else if (error.code === 'auth/cancelled-popup-request') {
+    //   console.error("Sign-in was cancelled.");
+    // } else if (error.code === 'auth/popup-closed-by-user') {
+    //   console.error("Sign-in window was closed.");
+    // }
   }
 };
+
 const checkUserProfile = async (userId: string) => {
   try {
     const db = getFirestore(firebaseApp);
