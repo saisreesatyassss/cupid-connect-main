@@ -1,6 +1,6 @@
 // Import the necessary libraries
 "use client";
-import React, { useState } from 'react'; 
+import React, { useEffect, useState } from 'react'; 
 import Image from 'next/image'; 
 import { useRouter } from 'next/navigation'; 
 import { firebaseApp} from "../../lib/firebaseConfig";
@@ -20,7 +20,7 @@ function Main() {
 const [user, setUser] = useState<User | null>(null);
 const router = useRouter();
 
- 
+
 
 // const signIn = async () => {
 //   try {
@@ -47,61 +47,92 @@ const router = useRouter();
 //   }
 // };
 
-// import { auth, GoogleAuthProvider, signInWithPopup, signInWithRedirect } from './firebase-config';
+  // const [user, setUser] = useState<User | null>(null);
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
 
-// Set up auth state listener (should be placed in your app initialization)
-auth.onAuthStateChanged(async (user) => {
-  if (user) {
-    console.log('User signed in:', user.uid);
-    await checkUserProfile(user.uid);
-    setUser(user); // Update your application state
-  } else {
-    console.log('User signed out');
-    setUser(null); // Clear user state
-  }
-});
-
-const signIn = async () => {
-  try {
-    const currentUser = auth.currentUser;
-    
-    if (currentUser) {
-      console.log("User is already signed in.");
-      return;
-    }
-
-    const provider = new GoogleAuthProvider();
-    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
-    if (isIOS) {
-      // Use redirect for iOS devices
-      await signInWithRedirect(auth, provider);
-    } else {
-      // Use popup for non-iOS devices
-      const result = await signInWithPopup(auth, provider);
-      console.log("Google sign-in successful:", result.user);
-    }
-  } catch (error) {
-    console.error("Error signing in:", error);
-    // Handle specific errors if needed
-    if (error === 'auth/popup-blocked') {
-      alert('Please allow popups for sign-in to work properly.');
-    }
-  }
-};
-
-// Optional: Handle redirect result when app loads
-if (typeof window !== 'undefined') {
-  getRedirectResult(auth)
-    .then((result) => {
-      if (result?.user) {
-        console.log("Successful redirect sign-in:", result.user);
+  // Auth state listener
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+      try {
+        if (user) {
+          console.log('User signed in:', user.uid);
+          await checkUserProfile(user.uid);
+          setUser(user);
+        } else {
+          console.log('User signed out');
+          setUser(null);
+        }
+      } catch (error) {
+        console.error('Error in auth state listener:', error);
+        setError('Failed to check authentication state.');
+      } finally {
+        setLoading(false);
       }
-    })
-    .catch((error) => {
-      console.error("Error handling redirect result:", error);
     });
-}
+
+    // Cleanup listener on unmount
+    return () => unsubscribe();
+  }, []);
+
+  // Handle redirect result for iOS
+  useEffect(() => {
+    const handleRedirectResult = async () => {
+      try {
+        const result = await getRedirectResult(auth);
+        if (result?.user) {
+          console.log('Successful redirect sign-in:', result.user);
+          setUser(result.user);
+          await checkUserProfile(result.user.uid);
+        }
+      } catch (error) {
+        console.error('Error handling redirect result:', error);
+        setError('Failed to complete redirect sign-in.');
+      }
+    };
+
+    handleRedirectResult();
+  }, []);
+
+  const signIn = async () => {
+    try {
+      const currentUser = auth.currentUser;
+
+      if (currentUser) {
+        console.log('User is already signed in.');
+        return;
+      }
+
+      const provider = new GoogleAuthProvider();
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
+
+      if (isIOS) {
+        // Use redirect for iOS devices
+        console.log('iOS detected, using redirect for sign-in...');
+        await signInWithRedirect(auth, provider);
+      } else {
+        // Use popup for non-iOS devices
+        console.log('Non-iOS device, using popup for sign-in...');
+        const result = await signInWithPopup(auth, provider);
+        console.log('Google sign-in successful:', result.user);
+        setUser(result.user);
+        await checkUserProfile(result.user.uid);
+      }
+    } catch (error) {
+      console.error('Error signing in:', error);
+      setError('Failed to sign in. Please try again.');
+
+      // Handle specific errors
+      if (error === 'auth/popup-blocked') {
+        setError('Please allow popups for sign-in to work properly.');
+      } else if (error === 'auth/network-request-failed') {
+        setError('Network error. Please check your internet connection.');
+      } else if (error === 'auth/internal-error') {
+        setError('Internal error. Please try again later.');
+      }
+    }
+  };
+
 
 const checkUserProfile = async (userId: string) => {
   try {
@@ -147,11 +178,11 @@ const checkUserProfile = async (userId: string) => {
  
     <section className="text-white h-screen relative">
 
-
    
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
             <div className="logo-container" onClick={signIn}>
-      
+      <h1 className='text-white'>{error}</h1>
+
             <Image
               src="/Logo1.png"
               width={250}
