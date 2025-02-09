@@ -20,7 +20,7 @@ function Main() {
 const [user, setUser] = useState<User | null>(null);
 const router = useRouter();
 
-
+ 
 
 // const signIn = async () => {
 //   try {
@@ -47,92 +47,106 @@ const router = useRouter();
 //   }
 // };
 
-  // const [user, setUser] = useState<User | null>(null);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
+// Helper function to detect iOS
+const isIOS = () => {
+  if (typeof window === 'undefined') return false;
+  return [
+    'iPad Simulator',
+    'iPhone Simulator',
+    'iPod Simulator',
+    'iPad',
+    'iPhone',
+    'iPod'
+  ].includes(navigator.platform)
+  || (navigator.userAgent.includes("Mac") && "ontouchend" in document);
+};
 
-  // Auth state listener
-  useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
+const signIn = async () => {
+  try {
+    const currentUser = auth.currentUser;
+    
+    if (currentUser) {
+      console.log("User is already signed in.");
+      await checkUserProfile(currentUser.uid);
+      return;
+    }
+
+    const provider = new GoogleAuthProvider();
+    
+    // Add additional scopes if needed
+    provider.addScope('profile');
+    provider.addScope('email');
+    
+    let result;
+    
+    if (isIOS()) {
+      // For iOS devices, use signInWithRedirect
       try {
-        if (user) {
-          console.log('User signed in:', user.uid);
-          await checkUserProfile(user.uid);
-          setUser(user);
+        // First, check if there's a pending redirect result
+        const pendingResult = await getRedirectResult(auth);
+        if (pendingResult && pendingResult.user) {
+          result = pendingResult;
         } else {
-          console.log('User signed out');
-          setUser(null);
+          // No pending result, initiate redirect
+          await signInWithRedirect(auth, provider);
+          return; // Function will resume on redirect callback
         }
-      } catch (error) {
-        console.error('Error in auth state listener:', error);
-        setError('Failed to check authentication state.');
-      } finally {
-        setLoading(false);
+      } catch (redirectError) {
+        // if (redirectError.code === 'auth/missing-config') {
+        //   // Fallback to in-app browser solution
+        //   const browserResult = await signInWithPopup(auth, provider);
+        //   result = browserResult;
+        // } else {
+        //   throw redirectError;
+        // }
       }
-    });
+    } else {
+      // For non-iOS devices, use popup
+      result = await signInWithPopup(auth, provider);
+    }
 
-    // Cleanup listener on unmount
-    return () => unsubscribe();
-  }, []);
-
-  // Handle redirect result for iOS
-  useEffect(() => {
-    const handleRedirectResult = async () => {
-      try {
-        const result = await getRedirectResult(auth);
-        if (result?.user) {
-          console.log('Successful redirect sign-in:', result.user);
-          setUser(result.user);
-          await checkUserProfile(result.user.uid);
-        }
-      } catch (error) {
-        console.error('Error handling redirect result:', error);
-        setError('Failed to complete redirect sign-in.');
-      }
-    };
-
-    handleRedirectResult();
-  }, []);
-
-  const signIn = async () => {
-    try {
-      const currentUser = auth.currentUser;
-
-      if (currentUser) {
-        console.log('User is already signed in.');
-        return;
-      }
-
-      const provider = new GoogleAuthProvider();
-      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
-
-      if (isIOS) {
-        // Use redirect for iOS devices
-        console.log('iOS detected, using redirect for sign-in...');
-        await signInWithRedirect(auth, provider);
-      } else {
-        // Use popup for non-iOS devices
-        console.log('Non-iOS device, using popup for sign-in...');
-        const result = await signInWithPopup(auth, provider);
-        console.log('Google sign-in successful:', result.user);
-        setUser(result.user);
+    // If we reach here, we have a result
+    if (result && result.user) {
+      setUser(result.user);
+      
+      if (typeof window !== 'undefined') {
+        console.log("Checking user profile...");
         await checkUserProfile(result.user.uid);
       }
-    } catch (error) {
-      console.error('Error signing in:', error);
-      setError('Failed to sign in. Please try again.');
-
-      // Handle specific errors
-      if (error === 'auth/popup-blocked') {
-        setError('Please allow popups for sign-in to work properly.');
-      } else if (error === 'auth/network-request-failed') {
-        setError('Network error. Please check your internet connection.');
-      } else if (error === 'auth/internal-error') {
-        setError('Internal error. Please try again later.');
-      }
     }
-  };
+  } catch (error) {
+    // console.error("Error signing in:", error.code, error.message);
+    // // Handle specific error cases
+    // if (error.code === 'auth/popup-blocked') {
+    //   alert('Please allow popups for this website to sign in.');
+    // } else if (error.code === 'auth/cancelled-popup-request') {
+    //   console.log('Sign-in cancelled by user');
+    // } else {
+    //   alert('An error occurred during sign-in. Please try again.');
+    // }
+  }
+};
 
+// Add this to your app's initialization code
+const initializeAuth = () => {
+  if (typeof window !== 'undefined') {
+    // Check for redirect result on page load
+    getRedirectResult(auth)
+      .then((result) => {
+        if (result && result.user) {
+          setUser(result.user);
+          checkUserProfile(result.user.uid);
+        }
+      })
+      .catch((error) => {
+        console.error("Error getting redirect result:", error);
+      });
+  }
+};
+
+  useEffect(() => {
+initializeAuth();
+  }, []);
 
 const checkUserProfile = async (userId: string) => {
   try {
@@ -178,11 +192,11 @@ const checkUserProfile = async (userId: string) => {
  
     <section className="text-white h-screen relative">
 
+
    
       <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
             <div className="logo-container" onClick={signIn}>
-      <h1 className='text-white'>{error}</h1>
-
+      
             <Image
               src="/Logo1.png"
               width={250}
