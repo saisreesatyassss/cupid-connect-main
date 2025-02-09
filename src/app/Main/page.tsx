@@ -7,7 +7,7 @@ import { firebaseApp} from "../../lib/firebaseConfig";
 import { Home,HomeIcon, Settings } from "lucide-react";
 
 
-import { GoogleAuthProvider, User, getAuth, signInWithPopup } from 'firebase/auth';
+import { GoogleAuthProvider, User, getAuth, getRedirectResult, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { addDoc, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import FloatingWidget from '../FloatingWidget';
 
@@ -22,30 +22,86 @@ const router = useRouter();
 
  
 
+// const signIn = async () => {
+//   try {
+//     const currentUser = auth.currentUser;
+    
+//     if (currentUser) {
+//       console.log("User is already signed in.");
+//       await checkUserProfile(currentUser.uid);
+//       return;
+//     }
+
+//     const provider = new GoogleAuthProvider();
+//     const result = await signInWithPopup(auth, provider);
+//     setUser(result.user);
+
+//     if (typeof window !== 'undefined') {
+//       console.log("Checking user profile...");
+//       await checkUserProfile(result.user.uid);
+//       console.log(checkUserProfile(result.user.uid));
+
+//     }
+//   } catch (error) {
+//     console.error("Error signing in:", error);
+//   }
+// };
+
+// import { auth, GoogleAuthProvider, signInWithPopup, signInWithRedirect } from './firebase-config';
+
+// Set up auth state listener (should be placed in your app initialization)
+auth.onAuthStateChanged(async (user) => {
+  if (user) {
+    console.log('User signed in:', user.uid);
+    await checkUserProfile(user.uid);
+    setUser(user); // Update your application state
+  } else {
+    console.log('User signed out');
+    setUser(null); // Clear user state
+  }
+});
+
 const signIn = async () => {
   try {
     const currentUser = auth.currentUser;
     
     if (currentUser) {
       console.log("User is already signed in.");
-      await checkUserProfile(currentUser.uid);
       return;
     }
 
     const provider = new GoogleAuthProvider();
-    const result = await signInWithPopup(auth, provider);
-    setUser(result.user);
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent);
 
-    if (typeof window !== 'undefined') {
-      console.log("Checking user profile...");
-      await checkUserProfile(result.user.uid);
-      console.log(checkUserProfile(result.user.uid));
-
+    if (isIOS) {
+      // Use redirect for iOS devices
+      await signInWithRedirect(auth, provider);
+    } else {
+      // Use popup for non-iOS devices
+      const result = await signInWithPopup(auth, provider);
+      console.log("Google sign-in successful:", result.user);
     }
   } catch (error) {
     console.error("Error signing in:", error);
+    // Handle specific errors if needed
+    if (error === 'auth/popup-blocked') {
+      alert('Please allow popups for sign-in to work properly.');
+    }
   }
 };
+
+// Optional: Handle redirect result when app loads
+if (typeof window !== 'undefined') {
+  getRedirectResult(auth)
+    .then((result) => {
+      if (result?.user) {
+        console.log("Successful redirect sign-in:", result.user);
+      }
+    })
+    .catch((error) => {
+      console.error("Error handling redirect result:", error);
+    });
+}
 
 const checkUserProfile = async (userId: string) => {
   try {
