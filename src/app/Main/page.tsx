@@ -188,15 +188,24 @@ const checkUserProfile = async (userId: string) => {
 };
 
 
+  const [showOverlay, setShowOverlay] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowOverlay(true);
+    }, 5000); // Show after 5 seconds
+
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
  
-    <section className="text-white h-screen relative">
+    <section className="text-white h-screen relative ">
 
 
    
-      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10">
-            <div className="logo-container" onClick={signIn}>
+      <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-10 ">
+            <div className="logo-container " onClick={signIn}>
       
             <Image
               src="/Logo1.png"
@@ -204,7 +213,13 @@ const checkUserProfile = async (userId: string) => {
               height={100}
               alt="Logo"
               className="logo"
-            />
+            /> {/* Overlay with pointer text */}
+        {showOverlay && (
+<div className="absolute top-full left-1/2 transform -translate-x-1/2 mt-3 px-6 py-3 bg-white text-pink-600 font-semibold text-lg md:text-xl shadow-lg rounded-lg animate-bounce w-[90%] max-w-[350px] text-center sm:w-[300px] sm:text-lg">
+  😏 Still waiting? That’s why you're single! Click now! 💕
+</div>
+
+        )}
         
                </div>
 
