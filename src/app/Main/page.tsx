@@ -47,6 +47,8 @@ const router = useRouter();
 //   }
 // };
 
+
+
 // Helper function to detect iOS
 const isIOS = () => {
   if (typeof window === 'undefined') return false;
@@ -78,30 +80,13 @@ const signIn = async () => {
     provider.addScope('email');
     
     let result;
-    
+
     if (isIOS()) {
-      // For iOS devices, use signInWithRedirect
-      try {
-        // First, check if there's a pending redirect result
-        const pendingResult = await getRedirectResult(auth);
-        if (pendingResult && pendingResult.user) {
-          result = pendingResult;
-        } else {
-          // No pending result, initiate redirect
-          await signInWithRedirect(auth, provider);
-          return; // Function will resume on redirect callback
-        }
-      } catch (redirectError) {
-        if (redirectError === 'auth/missing-config') {
-          // Fallback to in-app browser solution
-          const browserResult = await signInWithPopup(auth, provider);
-          result = browserResult;
-        } else {
-          throw redirectError;
-        }
-      }
+      // Redirect iOS users to /auth page before signing in
+      window.location.href = '/auth';
+      return;
     } else {
-      // For non-iOS devices, use popup
+      // For non-iOS devices, use popup sign-in
       result = await signInWithPopup(auth, provider);
     }
 
@@ -115,8 +100,6 @@ const signIn = async () => {
       }
     }
   } catch (error) {
-    // console.error("Error signing in:", error.code, error.message);
-    // Handle specific error cases
     if (error === 'auth/popup-blocked') {
       alert('Please allow popups for this website to sign in.');
     } else if (error === 'auth/cancelled-popup-request') {
@@ -126,6 +109,15 @@ const signIn = async () => {
     }
   }
 };
+
+// Function to detect if the device is iOS
+// const isIOS = () => {
+//   if (typeof window !== 'undefined') {
+//     return /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+//   }
+//   return false;
+// };
+
 
 // Add this to your app's initialization code
 const initializeAuth = () => {

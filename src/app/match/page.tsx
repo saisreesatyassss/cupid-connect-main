@@ -312,6 +312,7 @@ import { getAuth, onAuthStateChanged, User } from 'firebase/auth';
 import { firebaseApp } from "../../lib/firebaseConfig";
 import { collection, doc, DocumentData, getDoc, getDocs, getFirestore, query, updateDoc, where } from 'firebase/firestore';
 import FloatingWidget from '../FloatingWidget';
+// import { AppleAuthProvider } from 'firebase/auth';
 
 interface MatchedUser {
   id: string;
@@ -352,6 +353,8 @@ const Match = () => {
 
   const auth = getAuth(firebaseApp);
   const db = getFirestore(firebaseApp);
+
+
 
 
   useEffect(() => {
