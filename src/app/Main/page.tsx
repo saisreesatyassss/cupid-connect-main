@@ -92,13 +92,13 @@ const signIn = async () => {
           return; // Function will resume on redirect callback
         }
       } catch (redirectError) {
-        // if (redirectError.code === 'auth/missing-config') {
-        //   // Fallback to in-app browser solution
-        //   const browserResult = await signInWithPopup(auth, provider);
-        //   result = browserResult;
-        // } else {
-        //   throw redirectError;
-        // }
+        if (redirectError === 'auth/missing-config') {
+          // Fallback to in-app browser solution
+          const browserResult = await signInWithPopup(auth, provider);
+          result = browserResult;
+        } else {
+          throw redirectError;
+        }
       }
     } else {
       // For non-iOS devices, use popup
@@ -116,14 +116,14 @@ const signIn = async () => {
     }
   } catch (error) {
     // console.error("Error signing in:", error.code, error.message);
-    // // Handle specific error cases
-    // if (error.code === 'auth/popup-blocked') {
-    //   alert('Please allow popups for this website to sign in.');
-    // } else if (error.code === 'auth/cancelled-popup-request') {
-    //   console.log('Sign-in cancelled by user');
-    // } else {
-    //   alert('An error occurred during sign-in. Please try again.');
-    // }
+    // Handle specific error cases
+    if (error === 'auth/popup-blocked') {
+      alert('Please allow popups for this website to sign in.');
+    } else if (error === 'auth/cancelled-popup-request') {
+      console.log('Sign-in cancelled by user');
+    } else {
+      alert('An error occurred during sign-in. Please try again.');
+    }
   }
 };
 
@@ -144,9 +144,18 @@ const initializeAuth = () => {
   }
 };
 
+//   useEffect(() => {
+// initializeAuth();
+//   }, []);
+
   useEffect(() => {
-initializeAuth();
+    const interval = setInterval(() => {
+      initializeAuth();
+    }, 2000); // Runs every 2 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
   }, []);
+  
 
 const checkUserProfile = async (userId: string) => {
   try {
