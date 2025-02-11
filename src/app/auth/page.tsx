@@ -161,6 +161,7 @@
 
 
 'use client';
+import { motion } from "framer-motion"; // Import Framer Motion for animations
 
 import { useEffect, useState } from 'react';
 import { firebaseApp } from '../../lib/firebaseConfig';
@@ -176,7 +177,19 @@ import {
 } from 'firebase/auth';
 import { useRouter } from 'next/navigation'; 
 import { doc, getDoc, getFirestore } from 'firebase/firestore';
+import { Heart } from 'lucide-react';
 
+const FloatingHeart: React.FC<{ delay: number }> = ({ delay }) => (
+  <div 
+    className={`absolute text-pink-400 animate-float opacity-0`} 
+    style={{
+      animation: `float 4s ease-in-out infinite ${delay}s, fade 4s ease-in-out infinite ${delay}s`,
+      left: `${Math.random() * 100}%`
+    }}
+  >
+    <Heart size={16} fill="currentColor" />
+  </div>
+);
 const auth = getAuth(firebaseApp);
 
 export default function AuthComponent() {
@@ -185,6 +198,7 @@ export default function AuthComponent() {
   const [user, setUser] = useState<User | null>(null);
   const [error, setError] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const [isHovered, setIsHovered] = useState<boolean>(false);
 
   // Email validation function
   const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
@@ -276,18 +290,21 @@ export default function AuthComponent() {
   };
 
 const initializeAuth = () => { 
- if (user) {
+  if (user && user.emailVerified) {  // ✅ Check if email is verified
     setUser(user); 
     checkUserProfile(user.uid);
+  } else {
+    setError('Please verify your email before accessing your account.');
   }
 };
 
-// Assuming 'user' is coming from your auth context or state
+// Run on auth state change
 useEffect(() => {
   if (user) {
     initializeAuth();
   }
-}, [user]); 
+}, [user]);
+
 
 const checkUserProfile = async (userId: string) => {
   try {
@@ -327,57 +344,231 @@ const checkUserProfile = async (userId: string) => {
   }
 };
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-      <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-2xl font-semibold text-center mb-4">Firebase Auth</h2>
-        {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-        {successMessage && <p className="text-green-500 text-sm mb-4">{successMessage}</p>}
+    // <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
+    //   <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
+    //     <h2 className="text-2xl font-semibold text-center mb-4">Firebase Auth</h2>
+    //     {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
+    //     {successMessage && <p className="text-green-500 text-sm mb-4">{successMessage}</p>}
         
-        <input
+    //     <input
+    //       type="email"
+    //       placeholder="Email"
+    //       value={email}
+    //       onChange={(e) => setEmail(e.target.value)}
+    //       className="w-full p-2 border rounded mb-3"
+    //     />
+    //     <input
+    //       type="password"
+    //       placeholder="Password"
+    //       value={password}
+    //       onChange={(e) => setPassword(e.target.value)}
+    //       className="w-full p-2 border rounded mb-3"
+    //     />
+        
+    //     <button
+    //       onClick={handleRegister}
+    //       className="w-full bg-blue-500 text-white p-2 rounded mb-2 hover:bg-blue-600"
+    //     >
+    //       Register
+    //     </button>
+        
+    //     <button
+    //       onClick={handleSignIn}
+    //       className="w-full bg-green-500 text-white p-2 rounded mb-2 hover:bg-green-600"
+    //     >
+    //       Sign In
+    //     </button>
+        
+    //     <button
+    //       onClick={handleForgotPassword}
+    //       className="w-full bg-yellow-500 text-white p-2 rounded mb-2 hover:bg-yellow-600"
+    //     >
+    //       Forgot Password
+    //     </button>
+
+    //     {user && (
+    //       <button
+    //         onClick={handleSignOut}
+    //         className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600"
+    //       >
+    //         Sign Out
+    //       </button>
+    //     )}
+    //   </div>
+    // </div>
+
+    //    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-pink-50 to-rose-100 p-6">
+    //   <div className="w-full max-w-md bg-white rounded-3xl shadow-lg p-8 border border-pink-100">
+    //     <h2 className="text-3xl font-semibold text-center mb-6 text-rose-600">Find Your Match</h2>
+    //     <p className="text-pink-400 text-sm text-center mb-6">(Account Creation & Login)</p>
+        
+    //     {error && <p className="text-rose-500 text-sm mb-4 text-center">{error}</p>}
+    //     {successMessage && <p className="text-emerald-500 text-sm mb-4 text-center">{successMessage}</p>}
+        
+    //     <input
+    //       type="email"
+    //       placeholder="Your Email"
+    //       value={email}
+    //       onChange={(e) => setEmail(e.target.value)}
+    //       className="w-full p-3 border border-pink-200 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-pink-300 placeholder-pink-300"
+    //     />
+        
+    //     <input
+    //       type="password"
+    //       placeholder="Your Secret (Password)"
+    //       value={password}
+    //       onChange={(e) => setPassword(e.target.value)}
+    //       className="w-full p-3 border border-pink-200 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-pink-300 placeholder-pink-300"
+    //     />
+        
+    //     <button
+    //       onClick={handleRegister}
+    //       className="w-full bg-rose-500 text-white p-3 rounded-xl mb-3 hover:bg-rose-600 transition-colors font-medium"
+    //     >
+    //       Start Your Love Journey (Register)
+    //     </button>
+        
+    //     <button
+    //       onClick={handleSignIn}
+    //       className="w-full bg-pink-500 text-white p-3 rounded-xl mb-3 hover:bg-pink-600 transition-colors font-medium"
+    //     >
+    //       Return to Love (Sign In)
+    //     </button>
+        
+    //     <button
+    //       onClick={handleForgotPassword}
+    //       className="w-full bg-pink-200 text-pink-700 p-3 rounded-xl mb-3 hover:bg-pink-300 transition-colors font-medium"
+    //     >
+    //       Lost Your Way to Love? (Reset Password)
+    //     </button>
+
+    //     {user && (
+    //       <button
+    //         onClick={handleSignOut}
+    //         className="w-full bg-rose-100 text-rose-700 p-3 rounded-xl hover:bg-rose-200 transition-colors font-medium"
+    //       >
+    //         Take a Break (Sign Out)
+    //       </button>
+    //     )}
+        
+    //     <p className="text-pink-400 text-center text-sm mt-6">
+    //       ❤️ Where Hearts Connect ❤️
+    //     </p>
+    //   </div>
+    // </div>
+       <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-pink-50 to-rose-100 p-6 overflow-hidden">
+      {/* Floating Hearts Animation */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        {Array.from({ length: 10 }).map((_, i) => (
+          <motion.div
+            key={i}
+            initial={{ opacity: 0, y: 50, scale: 0.8 }}
+            animate={{ opacity: 1, y: -50, scale: 1 }}
+            transition={{
+              duration: 5,
+              delay: i * 0.5,
+              repeat: Infinity,
+              repeatType: "mirror",
+            }}
+            className="absolute text-pink-300 text-3xl animate-bounce"
+            style={{
+              top: `${Math.random() * 100}%`,
+              left: `${Math.random() * 100}%`,
+            }}
+          >
+            ❤️
+          </motion.div>
+        ))}
+      </div>
+
+      <motion.div
+        initial={{ opacity: 0, scale: 0.9 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="w-full max-w-md bg-white rounded-3xl shadow-lg p-8 border border-pink-100"
+      >
+        <h2 className="text-3xl font-semibold text-center mb-6 text-rose-600">
+          Find Your Match
+        </h2>
+        <p className="text-pink-400 text-sm text-center mb-6">
+          (Account Creation & Login)
+        </p>
+
+        {error && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-rose-500 text-sm mb-4 text-center"
+          >
+            {error}
+          </motion.p>
+        )}
+        {successMessage && (
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="text-emerald-500 text-sm mb-4 text-center"
+          >
+            {successMessage}
+          </motion.p>
+        )}
+
+        <motion.input
           type="email"
-          placeholder="Email"
+          placeholder="Your Email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-2 border rounded mb-3"
+          className="w-full p-3 border border-pink-200 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-pink-300 placeholder-pink-300"
+          whileFocus={{ scale: 1.05, transition: { duration: 0.3 } }}
         />
-        <input
+
+        <motion.input
           type="password"
-          placeholder="Password"
+          placeholder="Your Secret (Password)"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="w-full p-2 border rounded mb-3"
+          className="w-full p-3 border border-pink-200 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-pink-300 placeholder-pink-300"
+          whileFocus={{ scale: 1.05, transition: { duration: 0.3 } }}
         />
-        
-        <button
+
+        <motion.button
           onClick={handleRegister}
-          className="w-full bg-blue-500 text-white p-2 rounded mb-2 hover:bg-blue-600"
+          className="w-full bg-rose-500 text-white p-3 rounded-xl mb-3 hover:bg-rose-600 transition-transform font-medium"
+          whileHover={{ scale: 1.05 }}
         >
-          Register
-        </button>
-        
-        <button
+          Start Your Love Journey (Register)
+        </motion.button>
+
+        <motion.button
           onClick={handleSignIn}
-          className="w-full bg-green-500 text-white p-2 rounded mb-2 hover:bg-green-600"
+          className="w-full bg-pink-500 text-white p-3 rounded-xl mb-3 hover:bg-pink-600 transition-transform font-medium"
+          whileHover={{ scale: 1.05 }}
         >
-          Sign In
-        </button>
-        
-        <button
+          Return to Love (Sign In)
+        </motion.button>
+
+        <motion.button
           onClick={handleForgotPassword}
-          className="w-full bg-yellow-500 text-white p-2 rounded mb-2 hover:bg-yellow-600"
+          className="w-full bg-pink-200 text-pink-700 p-3 rounded-xl mb-3 hover:bg-pink-300 transition-transform font-medium"
+          whileHover={{ scale: 1.05 }}
         >
-          Forgot Password
-        </button>
+          Lost Your Way to Love? (Reset Password)
+        </motion.button>
 
         {user && (
-          <button
+          <motion.button
             onClick={handleSignOut}
-            className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600"
+            className="w-full bg-rose-100 text-rose-700 p-3 rounded-xl hover:bg-rose-200 transition-transform font-medium"
+            whileHover={{ scale: 1.05 }}
           >
-            Sign Out
-          </button>
+            Take a Break (Sign Out)
+          </motion.button>
         )}
-      </div>
+
+        <p className="text-pink-400 text-center text-sm mt-6">
+          ❤️ Where Hearts Connect ❤️
+        </p>
+      </motion.div>
     </div>
   );
 }

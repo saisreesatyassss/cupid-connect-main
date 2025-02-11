@@ -62,6 +62,7 @@ const db = getFirestore(firebaseApp);
         }
 
       } else {
+
         router.push('/');
       }
     });
@@ -359,189 +360,14 @@ const physicalIntimacyOptions = [
             </div>
           ))}
 
-{/* </div> */}
-{/* <div>
-  <div className="mb-4">
-    <label htmlFor="relationshipPreference" className="block text-gray-700 font-bold mb-2">Relationship Preference:</label>
-    {relationshipOptions.map((option, index) => (
-      <div key={index} className="flex items-center mb-2">
-        <input 
-          type="radio" 
-          id={`relationshipOption${index}`} 
-          value={option} 
-          checked={selectedRelationshipOption === option} 
-          onChange={() => setSelectedRelationshipOption(option)} 
-          className="mr-2"
-        />
-        <label htmlFor={`relationshipOption${index}`} className="text-gray-800">{option}</label>
-      </div>
-    ))}
-  </div>
-  <div className="mb-4">
-    <label htmlFor="communicationFrequency" className="block text-gray-700 font-bold mb-2">Communication Frequency:</label>
-    {communicationOptions.map((option, index) => (
-      <div key={index} className="flex items-center mb-2">
-        <input 
-          type="radio" 
-          id={`communicationOption${index}`} 
-          value={option} 
-          checked={selectedCommunicationOption === option} 
-          onChange={() => setSelectedCommunicationOption(option)} 
-          className="mr-2"
-        />
-        <label htmlFor={`communicationOption${index}`} className="text-gray-800">{option}</label>
-      </div>
-    ))}
-  </div>
-</div> */}
  
-  {/* Stance on Children */}
-  {/* <div className="mb-4">
-    <label htmlFor="stanceOnChildren" className="block text-gray-700 font-bold mb-2">Stance on Children:</label>
-    {stanceOnChildrenOptions.map((option, index) => (
-      <div key={index} className="flex items-center mb-2">
-        <input 
-          type="radio" 
-          id={`stanceOnChildrenOption${index}`} 
-          value={option} 
-          checked={selectedStanceOnChildren === option} 
-          onChange={() => setSelectedStanceOnChildren(option)} 
-          className="mr-2"
-        />
-        <label htmlFor={`stanceOnChildrenOption${index}`} className="text-gray-800">{option}</label>
-      </div>
-    ))}
-  </div> */}
-
-  {/* Lifestyle */}
-  {/* <div className="mb-4">
-    <label htmlFor="lifestyle" className="block text-gray-700 font-bold mb-2">Lifestyle:</label>
-    {lifestyleOptions.map((option, index) => (
-      <div key={index} className="flex items-center mb-2">
-        <input 
-          type="radio" 
-          id={`lifestyleOption${index}`} 
-          value={option} 
-          checked={selectedLifestyle === option} 
-          onChange={() => setSelectedLifestyle(option)} 
-          className="mr-2"
-        />
-        <label htmlFor={`lifestyleOption${index}`} className="text-gray-800">{option}</label>
-      </div>
-    ))}
-  </div> */}
-
-  {/* Ideal First Date */}
-  {/* <div className="mb-4">
-    <label htmlFor="idealFirstDate" className="block text-gray-700 font-bold mb-2">Ideal First Date:</label>
-    {idealFirstDateOptions.map((option, index) => (
-      <div key={index} className="flex items-center mb-2">
-        <input 
-          type="radio" 
-          id={`idealFirstDateOption${index}`} 
-          value={option} 
-          checked={selectedIdealFirstDate === option} 
-          onChange={() => setSelectedIdealFirstDate(option)} 
-          className="mr-2"
-        />
-        <label htmlFor={`idealFirstDateOption${index}`} className="text-gray-800">{option}</label>
-      </div>
-    ))}
-  </div> */}
-
-  {/* Attitude Towards Pets */}
-  {/* <div className="mb-4">
-    <label htmlFor="attitudeTowardsPets" className="block text-gray-700 font-bold mb-2">Attitude Towards Pets:</label>
-    {attitudeTowardsPetsOptions.map((option, index) => (
-      <div key={index} className="flex items-center mb-2">
-        <input 
-          type="radio" 
-          id={`attitudeTowardsPetsOption${index}`} 
-          value={option} 
-          checked={selectedAttitudeTowardsPets === option} 
-          onChange={() => setSelectedAttitudeTowardsPets(option)} 
-          className="mr-2"
-        />
-        <label htmlFor={`attitudeTowardsPetsOption${index}`} className="text-gray-800">{option}</label>
-      </div>
-    ))}
-  </div> */}
-
-  {/* Importance of Religion/Spirituality */}
-  {/* <div className="mb-4">
-    <label htmlFor="religionSpirituality" className="block text-gray-700 font-bold mb-2">Importance of Religion/Spirituality:</label>
-    {religionSpiritualityOptions.map((option, index) => (
-      <div key={index} className="flex items-center mb-2">
-        <input 
-          type="radio" 
-          id={`religionSpiritualityOption${index}`} 
-          value={option} 
-          checked={selectedReligionSpirituality === option} 
-          onChange={() => setSelectedReligionSpirituality(option)} 
-          className="mr-2"
-        />
-        <label htmlFor={`religionSpiritualityOption${index}`} className="text-gray-800">{option}</label>
-      </div>
-    ))}
-  </div> */}
-
-  {/* Conflict Resolution */}
-  {/* <div className="mb-4">
-    <label htmlFor="conflictResolution" className="block text-gray-700 font-bold mb-2">Conflict Resolution:</label>
-    {conflictResolutionOptions.map((option, index) => (
-      <div key={index} className="flex items-center mb-2">
-        <input 
-          type="radio" 
-          id={`conflictResolutionOption${index}`} 
-          value={option} 
-          checked={selectedConflictResolution === option} 
-          onChange={() => setSelectedConflictResolution(option)} 
-          className="mr-2"
-        />
-        <label htmlFor={`conflictResolutionOption${index}`} className="text-gray-800">{option}</label>
-      </div>
-    ))}
-  </div> */}
-
-  {/* Approach to Finances */}
-  {/* <div className="mb-4">
-    <label htmlFor="financesApproach" className="block text-gray-700 font-bold mb-2">Approach to Finances:</label>
-    {financesApproachOptions.map((option, index) => (
-      <div key={index} className="flex items-center mb-2">
-        <input 
-          type="radio" 
-          id={`financesApproachOption${index}`} 
-          value={option} 
-          checked={selectedFinancesApproach === option} 
-          onChange={() => setSelectedFinancesApproach(option)} 
-          className="mr-2"
-        />
-        <label htmlFor={`financesApproachOption${index}`} className="text-gray-800">{option}</label>
-      </div>
-    ))}
-  </div> */}
- {/* <div className="mb-4">
-    <label htmlFor="physicalIntimacy" className="block text-gray-700 font-bold mb-2">Importance of Physical Intimacy:</label>
-    {physicalIntimacyOptions.map((option, index) => (
-      <div key={index} className="flex items-center mb-2">
-        <input 
-          type="radio" 
-          id={`physicalIntimacyOption${index}`} 
-          value={option} 
-          checked={selectedPhysicalIntimacy === option} 
-          onChange={() => setSelectedPhysicalIntimacy(option)} 
-          className="mr-2"
-        />
-        <label htmlFor={`physicalIntimacyOption${index}`} className="text-gray-800">{option}</label>
-      </div>
-    ))}
-  </div>  */}
+ 
 
  
       <button 
         type="submit"
-        className="bg-pink-500 text-white font-bold py-2 px-4 rounded focus:outline-none hover:bg-pink-700 disabled:bg-gray-400"
-        disabled={!name || !age || !gender || !selectedRelationshipOption}
+        className=" rounded-full mx-auto block bg-pink-500 text-white font-bold py-2 px-4  focus:outline-none hover:bg-pink-700 disabled:bg-gray-400 my-12"
+        disabled={!name || !age || !gender || !selectedRelationshipOption || !selectedCommunicationOption || !selectedStanceOnChildren || !selectedLifestyle || !selectedIdealFirstDate || !selectedAttitudeTowardsPets || !selectedReligionSpirituality || !selectedConflictResolution || !selectedFinancesApproach || !selectedPhysicalIntimacy}
       >
         {loading ? 'Creating Profile...' : 'Create Profile'}
       </button>

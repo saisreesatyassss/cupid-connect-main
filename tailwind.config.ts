@@ -12,6 +12,12 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+       animation: {
+        'fadeIn': 'fadeIn 0.5s ease-in',
+        'fadeInUp': 'fadeInUp 0.5s ease-out',
+        'float': 'float 3s ease-in-out infinite',
+        'shake': 'shake 0.5s ease-in-out',
+      },
     },
   },
   plugins: [],
