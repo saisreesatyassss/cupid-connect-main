@@ -79,8 +79,8 @@ const db = getFirestore(firebaseApp);
     }
   };
  
-const maxUnlockedProfiles=3;
-const maxmatchScore=50;
+const maxUnlockedProfiles=6 ;
+const maxmatchScore=60;
 
  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
   event.preventDefault(); // Prevent default form submission behavior

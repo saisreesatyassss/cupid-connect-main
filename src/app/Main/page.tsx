@@ -21,31 +21,7 @@ const [user, setUser] = useState<User | null>(null);
 const router = useRouter();
 
  
-
-// const signIn = async () => {
-//   try {
-//     const currentUser = auth.currentUser;
-    
-//     if (currentUser) {
-//       console.log("User is already signed in.");
-//       await checkUserProfile(currentUser.uid);
-//       return;
-//     }
-
-//     const provider = new GoogleAuthProvider();
-//     const result = await signInWithPopup(auth, provider);
-//     setUser(result.user);
-
-//     if (typeof window !== 'undefined') {
-//       console.log("Checking user profile...");
-//       await checkUserProfile(result.user.uid);
-//       console.log(checkUserProfile(result.user.uid));
-
-//     }
-//   } catch (error) {
-//     console.error("Error signing in:", error);
-//   }
-// };
+ 
 
 
 
@@ -110,14 +86,7 @@ const signIn = async () => {
   }
 };
 
-// Function to detect if the device is iOS
-// const isIOS = () => {
-//   if (typeof window !== 'undefined') {
-//     return /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
-//   }
-//   return false;
-// };
-
+ 
 
 // Add this to your app's initialization code
 const initializeAuth = () => {
@@ -136,10 +105,7 @@ const initializeAuth = () => {
   }
 };
 
-//   useEffect(() => {
-// initializeAuth();
-//   }, []);
-
+ 
   useEffect(() => {
     const interval = setInterval(() => {
       initializeAuth();
