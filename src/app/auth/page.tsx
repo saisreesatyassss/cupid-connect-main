@@ -328,14 +328,14 @@ const checkUserProfile = async (userId: string) => {
       const isProfileComplete = requiredFields.every(field => userData[field]);
 
       if (isProfileComplete) {
-        console.log("Profile complete. Redirecting to /match");
+        // console.log("Profile complete. Redirecting to /match");
         router.push('/match');
       } else {
-        console.log("Profile incomplete. Redirecting to /profile");
+        // console.log("Profile incomplete. Redirecting to /profile");
         router.push('/profile');
       }
     } else {
-      console.log("No profile found. Redirecting to /profile");
+      // console.log("No profile found. Redirecting to /profile");
       router.push('/profile');
     }
   } catch (error) {

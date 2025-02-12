@@ -41,7 +41,7 @@ useEffect(() => {
     try {
       if ("serviceWorker" in navigator) {
         await navigator.serviceWorker.register("/firebase-messaging-sw.js");
-        console.log("Service Worker registered successfully.");
+        // console.log("Service Worker registered successfully.");
       }
     } catch (error) {
       console.error("Service Worker registration failed:", error);
