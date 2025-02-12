@@ -10,6 +10,7 @@ import { Home,HomeIcon, Settings } from "lucide-react";
 import { GoogleAuthProvider, User, getAuth, getRedirectResult, signInWithPopup, signInWithRedirect } from 'firebase/auth';
 import { addDoc, collection, doc, getDoc, getDocs, getFirestore, query, setDoc, updateDoc, where } from 'firebase/firestore';
 import FloatingWidget from '../FloatingWidget';
+import { FirebaseError } from 'firebase/app';
 
  
  
@@ -39,54 +40,128 @@ const isIOS = () => {
   || (navigator.userAgent.includes("Mac") && "ontouchend" in document);
 };
 
+// const signIn = async () => {
+//   try {
+//     const currentUser = auth.currentUser;
+    
+//     if (currentUser) {
+//       await checkUserProfile(currentUser.uid);
+//       return;
+//     }
+
+//     const provider = new GoogleAuthProvider();
+    
+//     provider.addScope('profile');
+//     provider.addScope('email');
+    
+//     let result;
+
+//     if (isIOS()) {
+//       window.location.href = '/auth';
+//       return;
+//     } else {
+//       result = await signInWithPopup(auth, provider);
+//     }
+
+//     if (result && result.user) {
+//       setUser(result.user);
+      
+//       if (typeof window !== 'undefined') {
+//         await checkUserProfile(result.user.uid);
+//       }
+//     }
+//   }  catch (error: unknown) {
+//     if (error instanceof FirebaseError) {
+//       console.error("Sign-in error:", error);
+
+//       switch (error.code) {
+//         case 'auth/popup-blocked':
+//           alert('Please allow popups for this website to sign in.');
+//           break;
+//         case 'auth/cancelled-popup-request':
+//           console.log('Sign-in cancelled by user');
+//           break;
+//         case 'auth/network-request-failed':
+//           alert('Network error. Please check your connection and try again.');
+//           break;
+//         case 'auth/unauthorized-domain':
+//           alert('This domain is not authorized for sign-in. Check Firebase settings.');
+//           break;
+//         case 'auth/popup-closed-by-user':
+//           alert('Sign-in popup closed. Please try again.');
+//           break;
+//         default:
+//           alert(`An error occurred during sign-in: ${error.message}`);
+//       }
+//     } else {
+//       console.error("Unexpected error:", error);
+//       alert("An unexpected error occurred. Please try again.");
+//     }
+//   }
+// };
+
+
 const signIn = async () => {
   try {
     const currentUser = auth.currentUser;
     
     if (currentUser) {
-      // console.log("User is already signed in.");
       await checkUserProfile(currentUser.uid);
       return;
     }
 
     const provider = new GoogleAuthProvider();
-    
-    // Add additional scopes if needed
     provider.addScope('profile');
     provider.addScope('email');
-    
+
     let result;
 
     if (isIOS()) {
-      // Redirect iOS users to /auth page before signing in
       window.location.href = '/auth';
       return;
     } else {
-      // For non-iOS devices, use popup sign-in
       result = await signInWithPopup(auth, provider);
     }
 
-    // If we reach here, we have a result
-    if (result && result.user) {
+    if (result?.user) {
       setUser(result.user);
-      
+
       if (typeof window !== 'undefined') {
-        // console.log("Checking user profile...");
         await checkUserProfile(result.user.uid);
       }
     }
-  } catch (error) {
-    if (error === 'auth/popup-blocked') {
-      alert('Please allow popups for this website to sign in.');
-    } else if (error === 'auth/cancelled-popup-request') {
-      console.log('Sign-in cancelled by user');
+  } catch (error: unknown) {
+    console.error("Sign-in error:", error);
+    
+    // Navigate to /auth on any error
+    window.location.href = '/auth';
+
+    if (error instanceof FirebaseError) {
+      switch (error.code) {
+        case 'auth/popup-blocked':
+          // alert('Please allow popups for this website to sign in.');
+          break;
+        case 'auth/cancelled-popup-request':
+          console.log('Sign-in cancelled by user');
+          break;
+        case 'auth/network-request-failed':
+          // alert('Network error. Please check your connection and try again.');
+          break;
+        case 'auth/unauthorized-domain':
+          // alert('This domain is not authorized for sign-in. Check Firebase settings.');
+          break;
+        case 'auth/popup-closed-by-user':
+          // alert('Sign-in popup closed. Please try again.');
+          break;
+        default:
+          // alert(`An error occurred during sign-in: ${error.message}`);
+      }
     } else {
-      alert('An error occurred during sign-in. Please try again.');
+      // alert("An unexpected error occurred. Redirecting...");
     }
   }
 };
 
- 
 
 // Add this to your app's initialization code
 const initializeAuth = () => {

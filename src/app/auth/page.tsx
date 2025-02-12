@@ -200,11 +200,10 @@ export default function AuthComponent() {
   const [successMessage, setSuccessMessage] = useState('');
   const [isHovered, setIsHovered] = useState<boolean>(false);
 
-  // Email validation function
-  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-    const router = useRouter();
 
-  // Register function
+  const isValidEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+  const router = useRouter();
   const handleRegister = async () => {
     setError('');
     setSuccessMessage('');
@@ -344,118 +343,7 @@ const checkUserProfile = async (userId: string) => {
   }
 };
   return (
-    // <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
-    //   <div className="w-full max-w-md bg-white rounded-lg shadow-md p-6">
-    //     <h2 className="text-2xl font-semibold text-center mb-4">Firebase Auth</h2>
-    //     {error && <p className="text-red-500 text-sm mb-4">{error}</p>}
-    //     {successMessage && <p className="text-green-500 text-sm mb-4">{successMessage}</p>}
-        
-    //     <input
-    //       type="email"
-    //       placeholder="Email"
-    //       value={email}
-    //       onChange={(e) => setEmail(e.target.value)}
-    //       className="w-full p-2 border rounded mb-3"
-    //     />
-    //     <input
-    //       type="password"
-    //       placeholder="Password"
-    //       value={password}
-    //       onChange={(e) => setPassword(e.target.value)}
-    //       className="w-full p-2 border rounded mb-3"
-    //     />
-        
-    //     <button
-    //       onClick={handleRegister}
-    //       className="w-full bg-blue-500 text-white p-2 rounded mb-2 hover:bg-blue-600"
-    //     >
-    //       Register
-    //     </button>
-        
-    //     <button
-    //       onClick={handleSignIn}
-    //       className="w-full bg-green-500 text-white p-2 rounded mb-2 hover:bg-green-600"
-    //     >
-    //       Sign In
-    //     </button>
-        
-    //     <button
-    //       onClick={handleForgotPassword}
-    //       className="w-full bg-yellow-500 text-white p-2 rounded mb-2 hover:bg-yellow-600"
-    //     >
-    //       Forgot Password
-    //     </button>
-
-    //     {user && (
-    //       <button
-    //         onClick={handleSignOut}
-    //         className="w-full bg-red-500 text-white p-2 rounded hover:bg-red-600"
-    //       >
-    //         Sign Out
-    //       </button>
-    //     )}
-    //   </div>
-    // </div>
-
-    //    <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-pink-50 to-rose-100 p-6">
-    //   <div className="w-full max-w-md bg-white rounded-3xl shadow-lg p-8 border border-pink-100">
-    //     <h2 className="text-3xl font-semibold text-center mb-6 text-rose-600">Find Your Match</h2>
-    //     <p className="text-pink-400 text-sm text-center mb-6">(Account Creation & Login)</p>
-        
-    //     {error && <p className="text-rose-500 text-sm mb-4 text-center">{error}</p>}
-    //     {successMessage && <p className="text-emerald-500 text-sm mb-4 text-center">{successMessage}</p>}
-        
-    //     <input
-    //       type="email"
-    //       placeholder="Your Email"
-    //       value={email}
-    //       onChange={(e) => setEmail(e.target.value)}
-    //       className="w-full p-3 border border-pink-200 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-pink-300 placeholder-pink-300"
-    //     />
-        
-    //     <input
-    //       type="password"
-    //       placeholder="Your Secret (Password)"
-    //       value={password}
-    //       onChange={(e) => setPassword(e.target.value)}
-    //       className="w-full p-3 border border-pink-200 rounded-xl mb-4 focus:outline-none focus:ring-2 focus:ring-pink-300 placeholder-pink-300"
-    //     />
-        
-    //     <button
-    //       onClick={handleRegister}
-    //       className="w-full bg-rose-500 text-white p-3 rounded-xl mb-3 hover:bg-rose-600 transition-colors font-medium"
-    //     >
-    //       Start Your Love Journey (Register)
-    //     </button>
-        
-    //     <button
-    //       onClick={handleSignIn}
-    //       className="w-full bg-pink-500 text-white p-3 rounded-xl mb-3 hover:bg-pink-600 transition-colors font-medium"
-    //     >
-    //       Return to Love (Sign In)
-    //     </button>
-        
-    //     <button
-    //       onClick={handleForgotPassword}
-    //       className="w-full bg-pink-200 text-pink-700 p-3 rounded-xl mb-3 hover:bg-pink-300 transition-colors font-medium"
-    //     >
-    //       Lost Your Way to Love? (Reset Password)
-    //     </button>
-
-    //     {user && (
-    //       <button
-    //         onClick={handleSignOut}
-    //         className="w-full bg-rose-100 text-rose-700 p-3 rounded-xl hover:bg-rose-200 transition-colors font-medium"
-    //       >
-    //         Take a Break (Sign Out)
-    //       </button>
-    //     )}
-        
-    //     <p className="text-pink-400 text-center text-sm mt-6">
-    //       ❤️ Where Hearts Connect ❤️
-    //     </p>
-    //   </div>
-    // </div>
+   
        <div className="relative flex flex-col items-center justify-center min-h-screen bg-gradient-to-b from-pink-50 to-rose-100 p-6 overflow-hidden">
       {/* Floating Hearts Animation */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">

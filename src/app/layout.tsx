@@ -1,30 +1,3 @@
-// import type { Metadata } from "next";
-// import { Inter } from "next/font/google";
-// import "./globals.css";
-// import NavBar from "@/components/Navbar/Navbar";
-
-// const inter = Inter({ subsets: ["latin"] });
-
-// export const metadata: Metadata = {
-//   title: "Cupid Connect",
-//   description: "Cupid Connect is for you ",
-// };
-
-// export default function RootLayout({
-//   children,
-// }: Readonly<{
-//   children: React.ReactNode;
-// }>) {
-//   return (
-//     <html lang="en">
-//       <body className={inter.className}>
-//         {/* <NavBar/> */}
-//         {children}
-//         </body>
-//     </html>
-//   );
-// }
-
 
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
@@ -41,12 +14,12 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Cupid Connect - Matchmaking & Chat 💕",
     description: "Find your perfect match and chat with like-minded people. Cupid Connect is your gateway to love!",
-    url: "https://cupidconnect.vercel.app/",
+    url: "https://cupidconnect.love/",
     siteName: "Cupid Connect",
     type: "website",
     images: [
       {
-        url: "https://cupidconnect.com/Logo1.png", // Replace with actual OG image URL
+        url: "https://cupidconnect.love/og_image.png",
         width: 1200,
         height: 630,
         alt: "Cupid Connect - Love & Matchmaking",
@@ -58,9 +31,9 @@ export const metadata: Metadata = {
     title: "Cupid Connect - Matchmaking & Chat 💕",
     description: "Join Cupid Connect and meet like-minded people for love and friendship.",
     site: "@CupidConnect",
-    images: ["https://cupidconnect.com/Logo1.png"], // Replace with actual Twitter OG image URL
+    images: ["https://cupidconnect.love/og_image.png"],
   },
-  themeColor: "#FF4081", // Love theme color (pinkish tone)
+  themeColor: "#FF4081",
 };
 
 export default function RootLayout({
