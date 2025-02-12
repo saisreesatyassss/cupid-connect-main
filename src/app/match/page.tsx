@@ -719,6 +719,7 @@ const calculateMatchScore = (currentUser: UserPreferences, otherUser: DocumentDa
           ) : (
             <p style={{ fontFamily: 'Arial', fontSize: '16px', color: '#666' }}>
               Oops, looks like your search history is as empty as your love life! 
+              <br />
               No matches found that align with your preferences.
             </p>
           )}
